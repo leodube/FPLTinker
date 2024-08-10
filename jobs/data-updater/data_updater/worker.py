@@ -1,10 +1,11 @@
 """Data updater job worker functionality is contained here."""
 import os
 
+from data_update.updaters import fixtures, player_stats, players, teams
 from flask import Flask
+from models import db
 
 from data_updater.config import Config
-from models import db
 
 
 def create_app():

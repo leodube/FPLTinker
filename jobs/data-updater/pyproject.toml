@@ -14,6 +14,26 @@ models = {path = "../../models"}
 psycopg2 = "^2.9.9"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+pylint = "^3.2.6"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+
+[tool.flake8]
+exclude = [
+    ".venv",
+]
+max-line-length = 120
+docstring-min-length=10
+count = true
+
+[tool.black]
+line-length = 120
+
+[tool.pylint.main]
+max-line-length = 120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
