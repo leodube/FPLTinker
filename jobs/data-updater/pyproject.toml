@@ -12,6 +12,7 @@ fpl = "^0.6.35"
 asyncio = "^3.4.3"
 models = {path = "../../models"}
 psycopg2 = "^2.9.9"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -24,15 +25,11 @@ flake8 = "^7.1.1"
 exclude = [
     ".venv",
 ]
-max-line-length = 120
 docstring-min-length=10
 count = true
 
 [tool.black]
-line-length = 120
-
-[tool.pylint.main]
-max-line-length = 120
+line-length = 80
 
 [build-system]
 requires = ["poetry-core"]

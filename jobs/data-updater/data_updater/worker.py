@@ -1,11 +1,14 @@
 """Data updater job worker functionality is contained here."""
+
 import os
 
-from data_update.updaters import fixtures, player_stats, players, teams
+import aiohttp
 from flask import Flask
+from fpl import FPL
 from models import db
 
 from data_updater.config import Config
+from data_updater.updaters import fixtures, players, teams
 
 
 def create_app():
@@ -18,5 +21,8 @@ def create_app():
 
 async def run(app: Flask):
     """Description"""
-    with app.app_context():
-        print('run')
+    async with aiohttp.ClientSession() as session:
+        fpl = FPL(session)
+        # await teams.update(fpl)
+        # await fixtures.update(fpl)
+        await players.update(fpl)

@@ -11,7 +11,23 @@ flask = "^3.0.3"
 flask-sqlalchemy = "^3.1.1"
 sqlalchemy-continuum = "^1.4.2"
 alembic = "^1.13.2"
+sqlalchemy = "^2.0.32"
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+pylint = "^3.2.6"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+
+[tool.flake8]
+exclude = [
+    ".venv",
+]
+docstring-min-length=10
+count = true
+
+[tool.black]
+line-length = 80
 
 [build-system]
 requires = ["poetry-core"]

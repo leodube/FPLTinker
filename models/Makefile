@@ -1,4 +1,4 @@
-PROJECT_NAME:=data_updater
+PROJECT_NAME:=models
 
 ################################################################################
 # COMMANDS -- Setup                                                            #
@@ -6,7 +6,7 @@ PROJECT_NAME:=data_updater
 setup: clean install
 
 clean: clean-pyc clean-test ## Clean the project
-	rm -rf .venv/
+	rm -rf venv/
 
 clean-pyc: ## Clean cache files
 	find . -name '*.pyc' -exec rm -f {} +
@@ -21,9 +21,6 @@ clean-test: ## clean test files
 
 install:
 	poetry install
-
-run:
-	. .venv/bin/activate && python update.py
 
 
 ################################################################################

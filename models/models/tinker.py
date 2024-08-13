@@ -1,7 +1,11 @@
 """Description"""
+
+from .base import Base
 from .db import db
 
-class Tinker(db.Model):
-    __tablename__ = 'tinkers'
 
-    id = db.Column(db.Integer, primary_key=True)
+class Tinker(Base):
+    """Description"""
+
+    __versioned__ = {}
+    __tablename__ = "tinkers"
