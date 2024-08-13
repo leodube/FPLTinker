@@ -1,6 +1,5 @@
-"""Description"""
+"""Player model"""
 
-from dataclasses import field
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -9,17 +8,10 @@ from .base import Base
 from .db import db
 
 DEFAULT_SEASON: int = 20232024
-STATUS_DETAILS: dict = {
-    "a": "available",
-    "d": "doubtful",
-    "i": "injured",
-    "s": "suspended",
-    "u": "unavailable",
-}
 
 
 class Player(Base):
-    """Description"""
+    """A class representing a player in Fantasy Premier League."""
 
     __versioned__ = {}
     __tablename__ = "players"
@@ -31,10 +23,8 @@ class Player(Base):
     second_name: Mapped[str]
     web_name: Mapped[str]
     squad_number: Mapped[int]
-    team: Mapped[int]
     team_code: Mapped[int]
-    element_type: Mapped[int]  # player position
-    status: Mapped[str]  # whether available (a), not (u), injured (d)
+    status: Mapped[str]
     news: Mapped[str]
     news_added: Mapped[Optional[bool]]
     penalties_order: Mapped[int]
@@ -51,8 +41,12 @@ class Player(Base):
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
+    # Foreign keys
+    team: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
+    position: Mapped[int] = mapped_column(db.ForeignKey("positions.id"))
+
     # Relationships
-    stats: Mapped[List["Stats"]] = db.relationship()
+    stats: Mapped[List["PlayerStats"]] = db.relationship()
 
     # Methods
     @classmethod
@@ -61,7 +55,7 @@ class Player(Base):
         return ["code"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int = None, season: int = DEFAULT_SEASON):
+    def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):
         """Return the player matching the fpl_id and season"""
         return (
             db.session.query(Player)

@@ -27,7 +27,7 @@ install:
 # COMMANDS -- CI                                                               #
 ################################################################################
 format:
-	. .venv/bin/activate && isort $(PROJECT_NAME) && black $(PROJECT_NAME)
+	. .venv/bin/activate && isort . && black .
 
 pylint:
 	. .venv/bin/activate && pylint $(PROJECT_NAME)

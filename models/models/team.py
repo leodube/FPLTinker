@@ -1,7 +1,6 @@
-"""Description"""
+"""Team model"""
 
-from dataclasses import field
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -12,7 +11,7 @@ DEFAULT_SEASON = 20232024
 
 
 class Team(Base):
-    """Description"""
+    """A class representing a team in Fantasy Premier League."""
 
     __versioned__ = {}
     __tablename__ = "teams"
@@ -39,6 +38,9 @@ class Team(Base):
     strength_defence_home: Mapped[int]
     strength_defence_away: Mapped[int]
 
+    # Relationships
+    players: Mapped[List["Player"]] = db.relationship()
+
     # Unused properties returned by FPL api
     pulse_id: int
 
@@ -52,7 +54,7 @@ class Team(Base):
         return ["code"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int = None, season: int = DEFAULT_SEASON):
+    def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):
         """Return the team matching the fpl_id and season"""
         return (
             db.session.query(Team)

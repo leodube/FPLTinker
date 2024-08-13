@@ -1,9 +1,7 @@
-"""Description"""
+"""Fixture model"""
 
-from dataclasses import field
 from typing import Optional
 
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -13,7 +11,7 @@ DEFAULT_SEASON = 20232024
 
 
 class Fixture(Base):
-    """Description"""
+    """A class representing a fixture in Fantasy Premier League."""
 
     __versioned__ = {}
     __tablename__ = "fixtures"
@@ -21,7 +19,6 @@ class Fixture(Base):
     # FPL api properties
     fpl_id: Mapped[int]
     code: Mapped[int]
-    gameweek: Mapped[int]
     finished: Mapped[bool]
     finished_provisional: Mapped[bool]
     kickoff_time: Mapped[timestamp]
@@ -32,12 +29,15 @@ class Fixture(Base):
     team_a_score: Mapped[Optional[int]]
     team_h_difficulty: Mapped[int]
     team_h_score: Mapped[Optional[int]]
-    stats: Mapped[Optional[JSONB]] = mapped_column(type_=JSONB)
+
+    # Unused properties returned by FPL api
+    stats: list  # FUTURE: create fixture_stats model to store these stats
 
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
     # Foreign keys
+    gameweek: Mapped[int] = mapped_column(db.ForeignKey("gameweeks.id"))
     team_a: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
     team_h: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
 

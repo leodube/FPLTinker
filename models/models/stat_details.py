@@ -1,13 +1,12 @@
-"""Description"""
+"""StatDetails model"""
 
 from sqlalchemy.orm import Mapped
 
 from .base import Base
-from .db import db
 
 
 class StatDetails(Base):
-    """Description"""
+    """A class representing stat details."""
 
     __versioned__ = {}
     __tablename__ = "stat_details"

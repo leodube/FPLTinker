@@ -6,7 +6,7 @@ These will get initialized by the application using the models
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import TIMESTAMP, func
+from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, mapped_column
 from sqlalchemy_continuum import make_versioned
 from typing_extensions import Annotated
@@ -14,12 +14,12 @@ from typing_extensions import Annotated
 intpk = Annotated[int, mapped_column(primary_key=True)]
 timestamp = Annotated[
     datetime,
-    mapped_column(nullable=False, server_default=func.UTC_TIMESTAMP()),
+    mapped_column(nullable=False, server_default=func.CURRENT_TIMESTAMP()),
 ]
 
 
 class SQLAlchemyBase(DeclarativeBase, MappedAsDataclass):
-    """Description"""
+    """The SQLAlchemy base model that adds support for declarative mapping and dataclass functionality"""
 
     pass
 

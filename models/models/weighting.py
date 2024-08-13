@@ -1,4 +1,4 @@
-"""Description"""
+"""Weighting Model"""
 
 from .base import Base
 from .db import db

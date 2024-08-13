@@ -1,4 +1,4 @@
-"""Description"""
+"""Base model"""
 
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column
@@ -7,7 +7,7 @@ from .db import db, intpk, timestamp
 
 
 class Base(db.Model):
-    """Description"""
+    """The base model adds general properties and methods that all subclasses will use"""
 
     __abstract__ = True
 
@@ -28,7 +28,7 @@ class Base(db.Model):
 
     @classmethod
     def index_constraints(cls):
-        """Description"""
+        """Return the constraints that the upsert will use to identify conflicts"""
         return ["id"]
 
     @classmethod

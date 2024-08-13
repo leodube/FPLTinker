@@ -557,10 +557,8 @@ version = "0.6.35"
 description = "A Python wrapper for the Fantasy Premier League API"
 optional = false
 python-versions = "*"
-files = [
-    {file = "fpl-0.6.35-py2.py3-none-any.whl", hash = "sha256:190b558f57f46883d99549ea6e5d10a62e4ddf4a72ab1694a557f52e565d59e2"},
-    {file = "fpl-0.6.35.tar.gz", hash = "sha256:174a6ba7fa0cd17e4eecfb704b0779a4c5eceabb44b3243d87ac7a0113433009"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 aiohttp = "*"
@@ -574,6 +572,12 @@ pytest = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
 pytest-mock = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/leodube/fpl.git"
+reference = "HEAD"
+resolved_reference = "88a67bdefb7621ac049675c50773231d08578e1b"
 
 [[package]]
 name = "frozenlist"
@@ -908,6 +912,7 @@ develop = false
 alembic = "^1.13.2"
 flask = "^3.0.3"
 flask-sqlalchemy = "^3.1.1"
+sqlalchemy = "^2.0.32"
 sqlalchemy-continuum = "^1.4.2"
 
 [package.source]
@@ -1581,4 +1586,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "80090a0167db56af1a7b153de626dbffd4cf6de0b15be1e317555f25d50819a0"
+content-hash = "6390c7a42081dcd4033e169d438d555e18d250881f90f2bc3ad3b275ae7c8dab"

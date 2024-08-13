@@ -1,6 +1,6 @@
 """Description"""
 
-statDetails: dict = {
+stat_details: dict = {
     "total_points": {
         "description": "Total points earned this season.",
         "label": "Total points",
@@ -160,14 +160,14 @@ statDetails: dict = {
 }
 
 
-def getStatDetails(name: str):
-    statDetails[name] or None
+def get_stat_details(name: str):
+    stat_details[name] or None
 
 
-def getStatNames():
-    return statDetails.keys()
+def get_stat_names():
+    return stat_details.keys()
 
 
-def getStatDescription(statName: str):
-    stat = getStatDetails(statName)
-    return stat.description if stat else "No description available"
+def get_stat_description(statName: str):
+    stat = get_stat_details(statName)
+    return stat["description"] if stat else "No description available"

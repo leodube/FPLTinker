@@ -1,4 +1,4 @@
-"""Description"""
+"""PlayerStats model"""
 
 from typing import Optional
 
@@ -8,11 +8,11 @@ from .base import Base
 from .db import db
 
 
-class Stats(Base):
-    """Description"""
+class PlayerStats(Base):
+    """A class representing a player's stats in Fantasy Premier League."""
 
     __versioned__ = {}
-    __tablename__ = "stats"
+    __tablename__ = "player_stats"
 
     # FPL api properties
     assists: Mapped[int]
