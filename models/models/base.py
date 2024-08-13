@@ -2,19 +2,21 @@
 
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import select
 
 from .db import db, intpk, timestamp
 
 
 class Base(db.Model):
-    """The base model adds general properties and methods that all subclasses will use"""
+    """The base model adds general properties and methods that all subclasses
+    will use"""
 
     __abstract__ = True
 
     # Base properties
-    id: Mapped[intpk] = mapped_column(init=False)
-    created_date: Mapped[timestamp] = mapped_column(init=False)
-    last_modified: Mapped[timestamp] = mapped_column(init=False)
+    id: Mapped[intpk] = mapped_column(init=False, sort_order=-2)
+    created_at: Mapped[timestamp] = mapped_column(init=False)
+    updated_at: Mapped[timestamp] = mapped_column(init=False)
 
     def save(self):
         """Save the object to the database."""
@@ -27,9 +29,25 @@ class Base(db.Model):
         db.session.commit()
 
     @classmethod
+    def last_updated(cls):
+        """Get the datestamp of the most recently updated entry."""
+        stmt = select(cls.updated_at).order_by(cls.updated_at.desc())
+        return db.session.scalar(stmt)
+
+    @classmethod
     def index_constraints(cls):
-        """Return the constraints that the upsert will use to identify conflicts"""
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
         return ["id"]
+
+    @classmethod
+    def on_conflict_set(cls, vals: dict) -> dict:
+        """Determines what values to update during the upsert operation.
+        Generally we want to keep the id and created_at date from the
+        original insert."""
+        del vals["id"]
+        del vals["created_at"]
+        return vals
 
     @classmethod
     def bulk_upsert(cls, rows):
@@ -37,6 +55,8 @@ class Base(db.Model):
         If a conflicting entry is found, update that entry instead."""
         stmt = insert(cls).values(rows)
         stmt = stmt.on_conflict_do_update(
-            index_elements=cls.index_constraints(), set_=dict(**stmt.excluded)
+            index_elements=cls.index_constraints(),
+            set_=cls.on_conflict_set({**stmt.excluded}),
         ).returning(cls)
-        # return db.session.scalars(stmt)
+        db.session.execute(stmt)
+        db.session.commit()

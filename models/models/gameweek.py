@@ -1,5 +1,7 @@
 """Gameweek model"""
 
+# pylint: disable=unsubscriptable-object
+
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -15,9 +17,10 @@ class Gameweek(Base):
 
     __versioned__ = {}
     __tablename__ = "gameweeks"
+    __table_args__ = (db.UniqueConstraint("fpl_id", "season"),)
 
     # FPL api properties
-    fpl_id: Mapped[int]
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     name: Mapped[str]
     average_entry_score: Mapped[int]
     data_checked: Mapped[bool]
@@ -38,23 +41,17 @@ class Gameweek(Base):
     top_element: Mapped[Optional[int]]
     top_element_info: Mapped[Optional[str]]
 
-    # Unused properties returned by FPL api
-    cup_leagues_created: bool
-    chip_plays: Optional[any]
-    deadline_time_epoch: int
-    deadline_time_game_offset: int
-    h2h_ko_matches_created: bool
-
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
     # Relationships
-    fixtures: Mapped[List["Fixture"]] = db.relationship()
+    fixtures: Mapped[List["Fixture"]] = db.relationship()  # noqa: F821
 
     # Methods
     @classmethod
     def index_constraints(cls):
-        """Description"""
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
         return ["fpl_id", "season"]
 
     @classmethod

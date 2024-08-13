@@ -17,41 +17,41 @@ class Player(Base):
     __tablename__ = "players"
 
     # FPL api properties
-    fpl_id: Mapped[int]
-    code: Mapped[int]
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
+    code: Mapped[int] = mapped_column(unique=True, sort_order=-1)
     first_name: Mapped[str]
     second_name: Mapped[str]
     web_name: Mapped[str]
-    squad_number: Mapped[int]
+    squad_number: Mapped[Optional[int]]
     team_code: Mapped[int]
     status: Mapped[str]
     news: Mapped[str]
-    news_added: Mapped[Optional[bool]]
-    penalties_order: Mapped[int]
+    news_added: Mapped[Optional[str]]
+    penalties_order: Mapped[Optional[int]]
     chance_of_playing_next_round: Mapped[Optional[int]]
     chance_of_playing_this_round: Mapped[Optional[int]]
     corners_and_indirect_freekicks_order: Mapped[Optional[int]]
     corners_and_indirect_freekicks_text: Mapped[Optional[str]]
-    direct_freekicks_order: Mapped[int]
-    direct_freekicks_text: Mapped[str]
-
-    # Unused properties returned by FPL api
-    penalties_text: str
+    direct_freekicks_order: Mapped[Optional[int]]
+    direct_freekicks_text: Mapped[Optional[str]]
 
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
     # Foreign keys
-    team: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
-    position: Mapped[int] = mapped_column(db.ForeignKey("positions.id"))
+    team: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
+    position: Mapped[int] = mapped_column(
+        db.ForeignKey("positions.id"), sort_order=-1
+    )
 
     # Relationships
-    stats: Mapped[List["PlayerStats"]] = db.relationship()
+    stats: Mapped[List["PlayerStats"]] = db.relationship()  # noqa: F821
 
     # Methods
     @classmethod
     def index_constraints(cls):
-        """Description"""
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
         return ["code"]
 
     @classmethod

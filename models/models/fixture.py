@@ -17,8 +17,8 @@ class Fixture(Base):
     __tablename__ = "fixtures"
 
     # FPL api properties
-    fpl_id: Mapped[int]
-    code: Mapped[int]
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
+    code: Mapped[int] = mapped_column(unique=True, sort_order=-1)
     finished: Mapped[bool]
     finished_provisional: Mapped[bool]
     kickoff_time: Mapped[timestamp]
@@ -30,19 +30,23 @@ class Fixture(Base):
     team_h_difficulty: Mapped[int]
     team_h_score: Mapped[Optional[int]]
 
-    # Unused properties returned by FPL api
-    stats: list  # FUTURE: create fixture_stats model to store these stats
-
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
     # Foreign keys
-    gameweek: Mapped[int] = mapped_column(db.ForeignKey("gameweeks.id"))
-    team_a: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
-    team_h: Mapped[int] = mapped_column(db.ForeignKey("teams.id"))
+    gameweek: Mapped[int] = mapped_column(
+        db.ForeignKey("gameweeks.id"), sort_order=-1
+    )
+    team_a: Mapped[int] = mapped_column(
+        db.ForeignKey("teams.id"), sort_order=-1
+    )
+    team_h: Mapped[int] = mapped_column(
+        db.ForeignKey("teams.id"), sort_order=-1
+    )
 
     # Methods
     @classmethod
     def index_constraints(cls):
-        """Description"""
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
         return ["code"]

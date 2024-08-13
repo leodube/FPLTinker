@@ -26,6 +26,7 @@ exclude = [
     ".venv",
 ]
 docstring-min-length=10
+max-line-length = 80
 count = true
 
 [tool.black]

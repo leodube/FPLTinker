@@ -25,11 +25,15 @@ flake8 = "^7.1.1"
 exclude = [
     ".venv",
 ]
+max-line-length = 80
 docstring-min-length=10
 count = true
 
 [tool.black]
 line-length = 80
+
+[tool.pylint.main]
+disable="C0201"
 
 [build-system]
 requires = ["poetry-core"]

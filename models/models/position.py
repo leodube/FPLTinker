@@ -17,7 +17,7 @@ class Position(Base):
     __tablename__ = "positions"
 
     # FPL api properties
-    fpl_id: Mapped[int]
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     plural_name: Mapped[str]
     plural_name_short: Mapped[str]
     singular_name: Mapped[str]
@@ -28,16 +28,11 @@ class Position(Base):
     ui_shirt_specific: Mapped[bool]
     element_count: Mapped[int]
 
-    # Unused properties returned by FPL api
-    squad_min_select: bool
-    squad_max_select: bool
-    sub_positions_locked: list
-
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship()
+    players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
 
     @classmethod
     def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):

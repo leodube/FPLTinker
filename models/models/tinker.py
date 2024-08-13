@@ -1,11 +1,10 @@
 """Tinker model"""
 
 from .base import Base
-from .db import db
 
 
 class Tinker(Base):
-    """Description"""
+    """A class representing a team tinker."""
 
     __versioned__ = {}
     __tablename__ = "tinkers"

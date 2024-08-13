@@ -63,27 +63,7 @@ class PlayerStats(Base):
     value_season: Mapped[str]
     yellow_cards: Mapped[int]
 
-    # Unused properties returned by FPL api
-    creativity_rank: int  # FUTURE: create own ranking script
-    creativity_rank_type: int  # ranking by player type (position)
-    ep_next: str
-    ep_this: Optional[str]
-    form_rank: int
-    form_rank_type: int
-    ict_index_rank: int
-    ict_index_rank_type: int
-    in_dreamteam: bool
-    influence_rank: int
-    influence_rank_type: int
-    now_cost_rank: int
-    now_cost_rank_type: int
-    points_per_game_rank: int
-    points_per_game_rank_type: int
-    selected_rank: int
-    selected_rank_type: int
-    special: int  # for shirt mode, generally unused
-    threat_rank: int
-    threat_rank_type: int
-
     # Foreign keys
-    player_id: Mapped[int] = mapped_column(db.ForeignKey("players.id"))
+    player_id: Mapped[int] = mapped_column(
+        db.ForeignKey("players.id"), sort_order=-1
+    )

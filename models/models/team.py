@@ -17,8 +17,8 @@ class Team(Base):
     __tablename__ = "teams"
 
     # FPL api properties
-    fpl_id: Mapped[int]
-    code: Mapped[int]
+    fpl_id: Mapped[int] = mapped_column(unique=True, sort_order=-1)
+    code: Mapped[int] = mapped_column(unique=True, sort_order=-1)
     name: Mapped[str]
     short_name: Mapped[str]
     position: Mapped[int]
@@ -39,10 +39,7 @@ class Team(Base):
     strength_defence_away: Mapped[int]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship()
-
-    # Unused properties returned by FPL api
-    pulse_id: int
+    players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
 
     # Additional properties
     season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
@@ -50,7 +47,8 @@ class Team(Base):
     # Methods
     @classmethod
     def index_constraints(cls):
-        """Description"""
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
         return ["code"]
 
     @classmethod

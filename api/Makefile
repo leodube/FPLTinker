@@ -1,10 +1,4 @@
-PROJECT_NAME:=models
-
-# Load .env
-ifneq (,$(wildcard ./.env))
-    include .env
-    export
-endif
+PROJECT_NAME:=api
 
 ################################################################################
 # COMMANDS -- Setup                                                            #
@@ -12,7 +6,7 @@ endif
 setup: clean install
 
 clean: clean-pyc clean-test ## Clean the project
-	rm -rf venv/
+	rm -rf .venv/
 
 clean-pyc: ## Clean cache files
 	find . -name '*.pyc' -exec rm -f {} +
@@ -28,12 +22,15 @@ clean-test: ## clean test files
 install:
 	poetry install
 
+run:
+	. .venv/bin/activate && python -m flask run -p 5000
+
 
 ################################################################################
 # COMMANDS -- CI                                                               #
 ################################################################################
 format:
-	. .venv/bin/activate && isort . && black .
+	. .venv/bin/activate && isort $(PROJECT_NAME) && black $(PROJECT_NAME)
 
 pylint:
 	. .venv/bin/activate && pylint $(PROJECT_NAME)
@@ -42,31 +39,3 @@ flake8:
 	. .venv/bin/activate && flake8 $(PROJECT_NAME)
 
 lint: pylint flake8
-
-
-################################################################################
-# COMMANDS -- Migrations                                                       #
-################################################################################
-create-db:
-	createdb \
-	-h $(DATABASE_HOST) \
-	-p $(DATABASE_PORT) \
-	-U $(DATABASE_USERNAME) \
-	-T template0 \
-	$(DATABASE_NAME)
-
-drop-db:
-	dropdb \
-	-h $(DATABASE_HOST) \
-	-p $(DATABASE_PORT) \
-	-U $(DATABASE_USERNAME) \
-	$(DATABASE_NAME)
-
-db-init:
-	flask db init
-
-db-migrate:
-	flask db migrate
-
-db-upgrade:
-	flask db upgrade

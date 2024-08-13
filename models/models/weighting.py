@@ -1,11 +1,10 @@
 """Weighting Model"""
 
 from .base import Base
-from .db import db
 
 
 class Weighting(Base):
-    """Description"""
+    """A class containing the user-defined stat weightings."""
 
     __versioned__ = {}
     __tablename__ = "weightings"

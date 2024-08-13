@@ -1,7 +1,6 @@
 """FixtureStats model"""
 
 from .base import Base
-from .db import db
 
 
 class FixtureStats(Base):

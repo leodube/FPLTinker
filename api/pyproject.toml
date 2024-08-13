@@ -1,13 +1,32 @@
 [tool.poetry]
 name = "fplt-api"
 version = "0.1.0"
-description = ""
+description = "Api for the fpltinker.team app"
 authors = ["Leo Dube <leo.s.dube@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+flask = "^3.0.3"
+python-dotenv = "^1.0.1"
 
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.2.6"
+isort = "^5.13.2"
+black = "^24.8.0"
+flake8 = "^7.1.1"
+
+[tool.flake8]
+exclude = [
+    ".venv",
+]
+max-line-length = 80
+docstring-min-length=10
+count = true
+
+[tool.black]
+line-length = 80
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,4 +1,8 @@
-"""Description"""
+"""Holds the stat details."""
+
+# pylint: skip-file;
+# flake8: noqa
+
 
 stat_details: dict = {
     "total_points": {
@@ -161,7 +165,7 @@ stat_details: dict = {
 
 
 def get_stat_details(name: str):
-    stat_details[name] or None
+    return stat_details.get(name, None)
 
 
 def get_stat_names():
