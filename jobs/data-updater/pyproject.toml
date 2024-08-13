@@ -9,9 +9,9 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.0.3"
 asyncio = "^3.4.3"
-models = {path = "../../models"}
 psycopg2 = "^2.9.9"
 python-dotenv = "^1.0.1"
+models = {path = "../../models"}
 fpl = {git = "https://github.com/leodube/fpl.git"}
 
 
