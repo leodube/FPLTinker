@@ -4,15 +4,16 @@ import json
 
 from fpl import FPL
 from models import Fixture, Gameweek, Team
+
 from .utils.date_utilities import is_today
 
 
 async def update(fpl: FPL):
     """Updates the fixtures fom the FPL api"""
     # Return if updater already ran today
-    if((last_updated := Fixture.last_updated()) and is_today(last_updated)):
+    if (last_updated := Fixture.last_updated()) and is_today(last_updated):
         return
-    
+
     # FUTURE: fdr = await fpl.FDR()
     fpl_fixtures = await fpl.get_fixtures(return_json=True)
 

@@ -1,5 +1,6 @@
 """This exports all of the models and schemas used by the application."""
 
+from .configuration import Configuration
 from .db import db
 from .fixture import Fixture
 from .fixture_stats import FixtureStats
@@ -13,6 +14,7 @@ from .tinker import Tinker
 from .weighting import Weighting
 
 __all__ = (
+    "Configuration",
     "db",
     "FixtureStats",
     "Fixture",

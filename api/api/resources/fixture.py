@@ -3,14 +3,14 @@
 from flask import jsonify
 from flask_restx import Namespace, Resource
 
-API = Namespace("Teams", description="FPL Teams")
+API = Namespace("Fixtures", description="FPL Fixtures")
 
 
 @API.route("/")
-class Team(Resource):
+class Fixture(Resource):
     """Description."""
 
     @staticmethod
     def get():
         """Description."""
-        return jsonify("test team")
+        return jsonify("test fixture")

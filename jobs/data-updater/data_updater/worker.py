@@ -7,6 +7,7 @@ from models import db
 
 from data_updater.config import Config
 from data_updater.updaters import (
+    configurations,
     fixtures,
     gameweeks,
     player_stats,
@@ -29,6 +30,7 @@ async def run():
     """Run the data updater worker"""
     async with aiohttp.ClientSession() as session:
         fpl = FPL(session)
+        await configurations.update(fpl)
         await teams.update(fpl)
         await gameweeks.update(fpl)
         await fixtures.update(fpl)

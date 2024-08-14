@@ -166,12 +166,3 @@ stat_details: dict = {
 
 def get_stat_details(name: str):
     return stat_details.get(name, None)
-
-
-def get_stat_names():
-    return stat_details.keys()
-
-
-def get_stat_description(statName: str):
-    stat = get_stat_details(statName)
-    return stat["description"] if stat else "No description available"

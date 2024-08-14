@@ -1,8 +1,8 @@
 """Base model"""
 
+from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import select
 
 from .db import db, intpk, timestamp
 
@@ -15,8 +15,8 @@ class Base(db.Model):
 
     # Base properties
     id: Mapped[intpk] = mapped_column(init=False, sort_order=-2)
-    created_at: Mapped[timestamp] = mapped_column(init=False)
-    updated_at: Mapped[timestamp] = mapped_column(init=False)
+    created_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
+    updated_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
 
     def save(self):
         """Save the object to the database."""

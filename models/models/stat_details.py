@@ -1,6 +1,6 @@
 """StatDetails model"""
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 
@@ -12,6 +12,13 @@ class StatDetails(Base):
     __tablename__ = "stat_details"
 
     # Properties
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True)
     label: Mapped[str]
     description: Mapped[str]
+
+    # Methods
+    @classmethod
+    def index_constraints(cls):
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
+        return ["name"]
