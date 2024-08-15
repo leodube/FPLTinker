@@ -29,13 +29,18 @@ class Base(db.Model):
         db.session.commit()
 
     @classmethod
+    def all(cls):
+        """Get all entries for the object."""
+        return db.session.scalar(select(cls))
+
+    @classmethod
     def last_updated(cls):
         """Get the datestamp of the most recently updated entry."""
         stmt = select(cls.updated_at).order_by(cls.updated_at.desc())
         return db.session.scalar(stmt)
 
     @classmethod
-    def index_constraints(cls):
+    def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["id"]

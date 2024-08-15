@@ -2,6 +2,8 @@
 
 # pylint: disable=unsubscriptable-object
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -47,13 +49,13 @@ class Gameweek(Base):
 
     # Methods
     @classmethod
-    def index_constraints(cls):
+    def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["fpl_id", "season"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int):
+    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Gameweek:
         """Return the gameweek matching the fpl_id and season"""
         return (
             db.session.query(Gameweek)

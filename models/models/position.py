@@ -1,5 +1,7 @@
 """Position model"""
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -33,7 +35,7 @@ class Position(Base):
     players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int):
+    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Position:
         """Return the team matching the fpl_id and season"""
         return (
             db.session.query(Position)

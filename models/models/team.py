@@ -1,5 +1,7 @@
 """Team model"""
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -44,13 +46,13 @@ class Team(Base):
 
     # Methods
     @classmethod
-    def index_constraints(cls):
+    def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["code"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int):
+    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Team:
         """Return the team matching the fpl_id and season"""
         return (
             db.session.query(Team)

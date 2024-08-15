@@ -44,7 +44,7 @@ class Fixture(Base):
 
     # Methods
     @classmethod
-    def index_constraints(cls):
+    def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["code"]
