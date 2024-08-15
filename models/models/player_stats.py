@@ -7,8 +7,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 from .db import db
 
-DEFAULT_SEASON: int = 20232024
-
 
 class PlayerStats(Base):
     """A class representing a player's stats in Fantasy Premier League."""
@@ -66,7 +64,7 @@ class PlayerStats(Base):
     yellow_cards: Mapped[int]
 
     # Additional properties
-    season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
+    season: Mapped[Optional[int]]
 
     # Foreign keys
     player_id: Mapped[int] = mapped_column(

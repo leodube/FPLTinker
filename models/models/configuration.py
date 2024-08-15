@@ -58,6 +58,7 @@ class Configuration(Base):
             return None
         return cls.cast_value(config.value, config._type)
 
+    # TODO: validate value and type before insert/update
     def validate_value(self):
         """Ensure the value is the correct type before insert or update."""
         Configuration.cast_value(self.value, self._type)
@@ -76,11 +77,3 @@ class Configuration(Base):
                 raise ValueError(
                     f"Cannot cast _type {type}. Make sure the type exists in the ConfigurationTypes enum."
                 )
-
-
-# Listen to 'before_insert' and 'before_update' events
-@event.listens_for(Configuration, "before_insert")
-@event.listens_for(Configuration, "before_update")
-def receive_before_insert(mapper, connection, target):
-    """Validate the value before it gets inserted/updated."""
-    target.validate_value()

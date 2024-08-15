@@ -1,7 +1,7 @@
 """The database updater for the player model"""
 
 from fpl import FPL
-from models import Player, Position, Team
+from models import Configuration, Player, Position, Team
 
 from .utils.date_utilities import is_today
 
@@ -18,8 +18,11 @@ async def update(fpl: FPL):
     players = []
     for fp in fpl_players:
         fp["fpl_id"] = fp["id"]
-        fp["position"] = Position.find_by_fpl_id(fp["element_type"]).id
-        fp["team"] = Team.find_by_fpl_id(fp["team"]).id
+        fp["season"] = Configuration.get_value_for(name="season")
+        fp["position"] = Position.find_by_fpl_id(
+            fp["element_type"], fp["season"]
+        ).id
+        fp["team"] = Team.find_by_fpl_id(fp["team"], fp["season"]).id
         player = {key: fp[key] for key in Player.__dict__.keys() if key in fp}
         players.append(player)
     Player.bulk_upsert(players)

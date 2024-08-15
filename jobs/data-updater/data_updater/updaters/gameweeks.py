@@ -1,7 +1,7 @@
 """The database updater for the gameweek model"""
 
 from fpl import FPL
-from models import Gameweek
+from models import Configuration, Gameweek
 
 from .utils.date_utilities import is_today
 
@@ -18,6 +18,7 @@ async def update(fpl: FPL):
     gameweeks = []
     for fg in fpl_gameweeks:
         fg["fpl_id"] = fg["id"]
+        fg["season"] = Configuration.get_value_for(name="season")
         gameweek = {
             key: fg[key] for key in Gameweek.__dict__.keys() if key in fg
         }

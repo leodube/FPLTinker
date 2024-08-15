@@ -7,8 +7,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 from .db import db
 
-DEFAULT_SEASON: int = 20232024
-
 
 class Player(Base):
     """A class representing a player in Fantasy Premier League."""
@@ -36,7 +34,7 @@ class Player(Base):
     direct_freekicks_text: Mapped[Optional[str]]
 
     # Additional properties
-    season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
+    season: Mapped[Optional[int]]
 
     # Foreign keys
     team: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
@@ -55,7 +53,7 @@ class Player(Base):
         return ["code"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):
+    def find_by_fpl_id(cls, fpl_id: int, season: int):
         """Return the player matching the fpl_id and season"""
         return (
             db.session.query(Player)

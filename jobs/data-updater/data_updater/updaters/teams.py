@@ -1,7 +1,7 @@
 """The database updater for the team model"""
 
 from fpl import FPL
-from models import Team
+from models import Configuration, Team
 
 from .utils.date_utilities import is_today
 
@@ -18,6 +18,7 @@ async def update(fpl: FPL):
     teams = []
     for ft in fpl_teams:
         ft["fpl_id"] = ft["id"]
+        ft["season"] = Configuration.get_value_for(name="season")
         team = {key: ft[key] for key in Team.__dict__.keys() if key in ft}
         teams.append(team)
     Team.bulk_upsert(teams)

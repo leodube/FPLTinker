@@ -7,8 +7,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 from .db import db, timestamp
 
-DEFAULT_SEASON = 20232024
-
 
 class Fixture(Base):
     """A class representing a fixture in Fantasy Premier League."""
@@ -31,7 +29,7 @@ class Fixture(Base):
     team_h_score: Mapped[Optional[int]]
 
     # Additional properties
-    season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
+    season: Mapped[Optional[int]]
 
     # Foreign keys
     gameweek: Mapped[int] = mapped_column(

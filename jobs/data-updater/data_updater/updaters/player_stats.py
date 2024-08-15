@@ -1,7 +1,7 @@
 """The database updater for the player stats model"""
 
 from fpl import FPL
-from models import Player, PlayerStats
+from models import Configuration, Player, PlayerStats
 
 from .utils.date_utilities import is_today
 
@@ -17,10 +17,11 @@ async def update(fpl: FPL):
     # Update player stats
     player_stats = []
     for fp in fpl_players:
+        fp["season"] = Configuration.get_value_for(name="season")
         stat = {
             key: fp[key] for key in PlayerStats.__dict__.keys() if key in fp
         }
-        stat["player_id"] = Player.find_by_fpl_id(fp["id"]).id
+        stat["player_id"] = Player.find_by_fpl_id(fp["id"], fp["season"]).id
         player_stats.append(stat)
     PlayerStats.bulk_upsert(player_stats)
 

@@ -9,7 +9,7 @@ config_details: dict = {
     "season": {
         "value": "20232024",
         "type": Configuration.ConfigurationTypes.INTEGER,
-        "description": "",
+        "description": "The currently active Fantasy Premiere League season",
     }
 }
 

@@ -1,7 +1,7 @@
 """The database updater for the position model"""
 
 from fpl import FPL
-from models import Position
+from models import Configuration, Position
 
 from .utils.date_utilities import is_today
 
@@ -18,6 +18,7 @@ async def update(fpl: FPL):
     positions = []
     for fp in fpl_positions:
         fp["fpl_id"] = fp["id"]
+        fp["season"] = Configuration.get_value_for(name="season")
         position = {
             key: fp[key] for key in Position.__dict__.keys() if key in fp
         }

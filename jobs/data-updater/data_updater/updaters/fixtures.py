@@ -3,7 +3,7 @@
 import json
 
 from fpl import FPL
-from models import Fixture, Gameweek, Team
+from models import Configuration, Fixture, Gameweek, Team
 
 from .utils.date_utilities import is_today
 
@@ -23,8 +23,9 @@ async def update(fpl: FPL):
         ff["fpl_id"] = ff["id"]
         ff["stats"] = json.dumps(ff["stats"]) if ff["stats"] else "[]"
         ff["gameweek"] = Gameweek.find_by_fpl_id(ff["event"]).id
-        ff["team_a"] = Team.find_by_fpl_id(ff["team_a"]).id
-        ff["team_h"] = Team.find_by_fpl_id(ff["team_h"]).id
+        ff["season"] = Configuration.get_value_for(name="season")
+        ff["team_a"] = Team.find_by_fpl_id(ff["team_a"], ff["season"]).id
+        ff["team_h"] = Team.find_by_fpl_id(ff["team_h"], ff["season"]).id
         fixture = {key: ff[key] for key in Fixture.__dict__.keys() if key in ff}
         fixtures.append(fixture)
     Fixture.bulk_upsert(fixtures)

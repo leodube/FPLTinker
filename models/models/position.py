@@ -1,13 +1,11 @@
 """Position model"""
 
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 from .db import db
-
-DEFAULT_SEASON = 20232024
 
 
 class Position(Base):
@@ -29,13 +27,13 @@ class Position(Base):
     element_count: Mapped[int]
 
     # Additional properties
-    season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
+    season: Mapped[Optional[int]]
 
     # Relationships
     players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):
+    def find_by_fpl_id(cls, fpl_id: int, season: int):
         """Return the team matching the fpl_id and season"""
         return (
             db.session.query(Position)

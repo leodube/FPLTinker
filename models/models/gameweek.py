@@ -9,8 +9,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 from .db import db
 
-DEFAULT_SEASON = 20232024
-
 
 class Gameweek(Base):
     """A class representing a gameweek in Fantasy Premier League."""
@@ -42,7 +40,7 @@ class Gameweek(Base):
     top_element_info: Mapped[Optional[str]]
 
     # Additional properties
-    season: Mapped[int] = mapped_column(init=False, default=DEFAULT_SEASON)
+    season: Mapped[Optional[int]]
 
     # Relationships
     fixtures: Mapped[List["Fixture"]] = db.relationship()  # noqa: F821
@@ -55,7 +53,7 @@ class Gameweek(Base):
         return ["fpl_id", "season"]
 
     @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int = DEFAULT_SEASON):
+    def find_by_fpl_id(cls, fpl_id: int, season: int):
         """Return the gameweek matching the fpl_id and season"""
         return (
             db.session.query(Gameweek)
