@@ -3,6 +3,7 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Gameweek
+from sqlalchemy.exc import SQLAlchemyError
 
 
 async def update(app: Flask, fpl: FPL):
@@ -20,10 +21,13 @@ async def update(app: Flask, fpl: FPL):
             key: fg[key] for key in Gameweek.__dict__.keys() if key in fg
         }
         gameweeks.append(gameweek)
-    updated = Gameweek.bulk_upsert(gameweeks)
-    app.logger.debug(
-        f"Successfully updated {len(updated)} out of {Gameweek.count()} total entries."
-    )
+    try:
+        updated = Gameweek.bulk_upsert(gameweeks)
+        app.logger.debug(
+            f"Successfully updated {len(updated)} out of {Gameweek.count()} total entries."
+        )
+    except SQLAlchemyError as err:
+        app.logger.error(f"Failed to update gameweeks. See error: {err}")
 
 
 # Unconsumed properties returned by FPL api

@@ -3,6 +3,7 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Player, PlayerStats
+from sqlalchemy.exc import SQLAlchemyError
 
 
 async def update(app: Flask, fpl: FPL):
@@ -21,10 +22,14 @@ async def update(app: Flask, fpl: FPL):
         stat["player_id"] = Player.find(fpl_id=fp["id"], season=fp["season"]).id
         del stat["id"]
         player_stats.append(stat)
-    updated = PlayerStats.bulk_upsert(player_stats)
-    app.logger.debug(
-        f"Successfully updated {len(updated)} out of {PlayerStats.count()} total entries."
-    )
+
+    try:
+        updated = PlayerStats.bulk_upsert(player_stats)
+        app.logger.debug(
+            f"Successfully updated {len(updated)} out of {PlayerStats.count()} total entries."
+        )
+    except SQLAlchemyError as err:
+        app.logger.error(f"Failed to update player stats. See error: {err}")
 
 
 # Unconsumed properties returned by FPL api

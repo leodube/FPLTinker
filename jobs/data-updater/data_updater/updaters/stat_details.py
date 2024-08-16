@@ -2,6 +2,7 @@
 
 from flask import Flask
 from models import PlayerStats, StatDetails
+from sqlalchemy.exc import SQLAlchemyError
 
 from .utils.date_utilities import is_today
 from .utils.stat_details import get_stat_details
@@ -23,7 +24,11 @@ def update(app: Flask):
     for sn in stat_names:
         if details_dict := get_stat_details(sn):
             stat_details.append({"name": sn, **details_dict})
-    updated = StatDetails.bulk_upsert(stat_details)
-    app.logger.debug(
-        f"Successfully updated {len(updated)} out of {StatDetails.count()} total entries."
-    )
+
+    try:
+        updated = StatDetails.bulk_upsert(stat_details)
+        app.logger.debug(
+            f"Successfully updated {len(updated)} out of {StatDetails.count()} total entries."
+        )
+    except SQLAlchemyError as err:
+        app.logger.error(f"Failed to update stat details. See error: {err}")

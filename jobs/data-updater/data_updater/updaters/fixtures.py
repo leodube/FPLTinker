@@ -5,6 +5,7 @@ import json
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Fixture, Gameweek, Team
+from sqlalchemy.exc import SQLAlchemyError
 
 
 async def update(app: Flask, fpl: FPL):
@@ -27,10 +28,13 @@ async def update(app: Flask, fpl: FPL):
         ff["team_h_id"] = Team.find(fpl_id=ff["team_h"], season=ff["season"]).id
         fixture = {key: ff[key] for key in Fixture.__dict__.keys() if key in ff}
         fixtures.append(fixture)
-    updated = Fixture.bulk_upsert(fixtures)
-    app.logger.debug(
-        f"Successfully updated {len(updated)} out of {Fixture.count()} total entries."
-    )
+    try:
+        updated = Fixture.bulk_upsert(fixtures)
+        app.logger.debug(
+            f"Successfully updated {len(updated)} out of {Fixture.count()} total entries."
+        )
+    except SQLAlchemyError as err:
+        app.logger.error(f"Failed to update fixtures. See error: {err}")
 
 
 # Unconsumed properties returned by FPL api
