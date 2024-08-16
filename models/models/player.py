@@ -47,7 +47,15 @@ class Player(Base):
     )
 
     # Relationships
-    stats: Mapped[List["PlayerStats"]] = db.relationship()  # noqa: F821
+    stats: Mapped[List["PlayerStats"]] = db.relationship(
+        back_populates="player"
+    )  # noqa: F821
+    position: Mapped["Position"] = db.relationship(
+        back_populates="players", viewonly=True
+    )  # noqa: F821
+    team: Mapped["Team"] = db.relationship(
+        back_populates="players", viewonly=True
+    )  # noqa: F821
 
     # Methods
     @classmethod

@@ -44,7 +44,9 @@ class Gameweek(Base):
     season: Mapped[Optional[int]]
 
     # Relationships
-    fixtures: Mapped[List["Fixture"]] = db.relationship()  # noqa: F821
+    fixtures: Mapped[List["Fixture"]] = db.relationship(
+        back_populates="gameweek"
+    )  # noqa: F821
 
     # Methods
     @classmethod

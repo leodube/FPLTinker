@@ -2,21 +2,20 @@
 
 from flask_restx import Namespace, Resource
 from models import Configuration, Position
-from .marshalling.models import position_dict, position_details_dict
+
+from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Positions", description="FPL Player Positions")
 
-position_model = api.model("PositionModel", position_dict)
-position_details_model = position_model.clone(
-    "PositionDetailsModel", position_details_dict
-)
+base_model = api.model("BaseModel", BaseMarshal.position)
+detailed_model = base_model.clone("DetailedModel", DetailedMarshal.position)
 
 
 @api.route("/")
 class PositionListResource(Resource):
     """Position list api resource."""
 
-    @api.marshal_with(position_model)
+    @api.marshal_with(base_model)
     def get(self):
         """Get a list of all the positions."""
         positions = Position.all()
@@ -28,7 +27,7 @@ class PositionListResource(Resource):
 class PositionResource(Resource):
     """Position api resource."""
 
-    @api.marshal_with(position_details_model)
+    @api.marshal_with(detailed_model)
     def get(self, fpl_id):
         """Get a position by it's Fpl identifier."""
         position = Position.find(

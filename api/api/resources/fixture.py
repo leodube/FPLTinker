@@ -2,21 +2,20 @@
 
 from flask_restx import Namespace, Resource
 from models import Configuration, Fixture
-from .marshalling.models import fixture_dict, fixture_details_dict
+
+from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Fixtures", description="FPL Fixtures")
 
-fixture_model = api.model("FixtureModel", fixture_dict)
-fixture_details_model = fixture_model.clone(
-    "FixtureDetailsModel", fixture_details_dict
-)
+base_model = api.model("BaseModel", BaseMarshal.fixture)
+detailed_model = base_model.clone("DetailedModel", DetailedMarshal.fixture)
 
 
 @api.route("/")
 class FixtureListResource(Resource):
     """Fixture list api resource."""
 
-    @api.marshal_with(fixture_model)
+    @api.marshal_with(base_model)
     def get(self):
         """Get a list of all the fixtures."""
         fixtures = Fixture.all()
@@ -28,7 +27,7 @@ class FixtureListResource(Resource):
 class FixtureResource(Resource):
     """Fixture api resource."""
 
-    @api.marshal_with(fixture_details_model)
+    @api.marshal_with(detailed_model)
     def get(self, fpl_id):
         """Get a fixture by it's Fpl identifier."""
         fixture = Fixture.find(

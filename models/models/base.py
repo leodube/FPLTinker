@@ -43,6 +43,14 @@ class Base(db.Model):
         return db.session.scalars(stmt).first()
 
     @classmethod
+    def find_all(cls, **kwargs):
+        """Find all entries that match the passed args."""
+        stmt = select(cls)
+        for key, value in kwargs.items():
+            stmt = stmt.where(getattr(cls, key) == value)
+        return db.session.scalars(stmt)
+
+    @classmethod
     def last_updated(cls) -> datetime:
         """Get the datestamp of the most recently updated entry."""
         stmt = select(cls.updated_at).order_by(cls.updated_at.desc())

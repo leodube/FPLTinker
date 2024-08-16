@@ -32,4 +32,6 @@ class Position(Base):
     season: Mapped[Optional[int]]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
+    players: Mapped[List["Player"]] = db.relationship(
+        back_populates="position"
+    )  # noqa: F821

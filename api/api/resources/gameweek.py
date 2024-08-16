@@ -1,22 +1,21 @@
 """Description."""
 
-from flask_restx import fields, Namespace, Resource
+from flask_restx import Namespace, Resource
 from models import Configuration, Gameweek
-from .marshalling.models import gameweek_dict, gameweek_details_dict
+
+from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Gameweeks", description="FPL Gameweeks")
 
-gameweek_model = api.model("GameweekModel", gameweek_dict)
-gameweek_details_model = gameweek_model.clone(
-    "GameweekDetailsModel", gameweek_details_dict
-)
+base_model = api.model("BaseModel", BaseMarshal.gameweek)
+detailed_model = base_model.clone("DetailedModel", DetailedMarshal.gameweek)
 
 
 @api.route("/")
 class GameweekListResource(Resource):
     """Gameweek list api resource."""
 
-    @api.marshal_with(gameweek_model)
+    @api.marshal_with(base_model)
     def get(self):
         """Get a list of all the gameweeks."""
         gameweeks = Gameweek.all()
@@ -28,7 +27,7 @@ class GameweekListResource(Resource):
 class GameweekResource(Resource):
     """Gameweek api resource."""
 
-    @api.marshal_with(gameweek_details_model)
+    @api.marshal_with(detailed_model)
     def get(self, fpl_id: int = None):
         """Get a gameweek by it's Fpl identifier."""
         if fpl_id:

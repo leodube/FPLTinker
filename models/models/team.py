@@ -39,7 +39,9 @@ class Team(Base):
     strength_defence_away: Mapped[int]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
+    players: Mapped[List["Player"]] = db.relationship(
+        back_populates="team"
+    )  # noqa: F821
 
     # Additional properties
     season: Mapped[Optional[int]]
