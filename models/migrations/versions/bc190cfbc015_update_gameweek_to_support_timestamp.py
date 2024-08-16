@@ -32,7 +32,7 @@ def upgrade():
             existing_type=sa.VARCHAR(),
             type_=sa.DateTime(),
             postgresql_using="deadline_time::timestamp",
-            nullable=False,
+            nullable=True,
         )
 
     # ### end Alembic commands ###

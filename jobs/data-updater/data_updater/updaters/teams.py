@@ -8,10 +8,6 @@ from .utils.date_utilities import is_today
 
 async def update(fpl: FPL):
     """Updates the teams fom the FPL api"""
-    # Return if updater already ran today
-    if (last_updated := Team.last_updated()) and is_today(last_updated):
-        return
-
     fpl_teams = await fpl.get_teams(return_json=True)
 
     # Update teams

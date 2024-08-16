@@ -8,10 +8,6 @@ from .utils.date_utilities import is_today
 
 async def update(fpl: FPL):
     """Updates the gameweeks fom the FPL api"""
-    # Return if updater already ran today
-    if (last_updated := Gameweek.last_updated()) and is_today(last_updated):
-        return
-
     fpl_gameweeks = await fpl.get_gameweeks(include_live=True, return_json=True)
 
     # Update gameweeks

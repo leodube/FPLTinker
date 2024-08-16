@@ -4,14 +4,11 @@ from fpl import FPL
 from models import Configuration, Player, Position, Team
 
 from .utils.date_utilities import is_today
+from pprint import pprint
 
 
 async def update(fpl: FPL):
     """Updates the players fom the FPL api"""
-    # Return if updater already ran today
-    if (last_updated := Player.last_updated()) and is_today(last_updated):
-        return
-
     fpl_players = await fpl.get_players(return_json=True)
 
     # Update players
@@ -19,11 +16,12 @@ async def update(fpl: FPL):
     for fp in fpl_players:
         fp["fpl_id"] = fp["id"]
         fp["season"] = Configuration.get("season")
-        fp["position"] = Position.find(
+        fp["position_id"] = Position.find(
             fpl_id=fp["element_type"], season=fp["season"]
         ).id
-        fp["team"] = Team.find(fpl_id=fp["team"], season=fp["season"]).id
+        fp["team_id"] = Team.find(fpl_id=fp["team"], season=fp["season"]).id
         player = {key: fp[key] for key in Player.__dict__.keys() if key in fp}
+        del player["team"]
         players.append(player)
     Player.bulk_upsert(players)
 
