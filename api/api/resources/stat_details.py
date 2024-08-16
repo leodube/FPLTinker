@@ -3,10 +3,10 @@
 from flask import jsonify
 from flask_restx import Namespace, Resource
 
-API = Namespace("StatDetails", description="Statistic Details")
+api = Namespace("StatDetails", description="Statistic Details")
 
 
-@API.route("/")
+@api.route("/")
 class StatDetail(Resource):
     """Description."""
 

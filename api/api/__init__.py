@@ -5,7 +5,7 @@ from models import db
 
 from api.config import Config
 
-from .resources import API_BLUEPRINT
+from .resources import blueprint
 
 
 def create_app():
@@ -13,5 +13,5 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
-    app.register_blueprint(API_BLUEPRINT)
+    app.register_blueprint(blueprint)
     return app

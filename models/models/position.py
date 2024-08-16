@@ -33,13 +33,3 @@ class Position(Base):
 
     # Relationships
     players: Mapped[List["Player"]] = db.relationship()  # noqa: F821
-
-    @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Position:
-        """Return the team matching the fpl_id and season"""
-        return (
-            db.session.query(Position)
-            .filter(Position.fpl_id == fpl_id)
-            .filter(Position.season == season)
-            .one_or_none()
-        )

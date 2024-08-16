@@ -39,8 +39,10 @@ class Player(Base):
     season: Mapped[Optional[int]]
 
     # Foreign keys
-    team: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
-    position: Mapped[int] = mapped_column(
+    team_id: Mapped[int] = mapped_column(
+        db.ForeignKey("teams.id"), sort_order=-1
+    )
+    position_id: Mapped[int] = mapped_column(
         db.ForeignKey("positions.id"), sort_order=-1
     )
 
@@ -53,13 +55,3 @@ class Player(Base):
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["code"]
-
-    @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Player:
-        """Return the player matching the fpl_id and season"""
-        return (
-            db.session.query(Player)
-            .filter(Player.fpl_id == fpl_id)
-            .filter(Player.season == season)
-            .one_or_none()
-        )

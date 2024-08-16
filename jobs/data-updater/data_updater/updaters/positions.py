@@ -18,7 +18,7 @@ async def update(fpl: FPL):
     positions = []
     for fp in fpl_positions:
         fp["fpl_id"] = fp["id"]
-        fp["season"] = Configuration.get_value_for(name="season")
+        fp["season"] = Configuration.get("season")
         position = {
             key: fp[key] for key in Position.__dict__.keys() if key in fp
         }

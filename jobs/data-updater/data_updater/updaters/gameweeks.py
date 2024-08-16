@@ -18,7 +18,7 @@ async def update(fpl: FPL):
     gameweeks = []
     for fg in fpl_gameweeks:
         fg["fpl_id"] = fg["id"]
-        fg["season"] = Configuration.get_value_for(name="season")
+        fg["season"] = Configuration.get("season")
         gameweek = {
             key: fg[key] for key in Gameweek.__dict__.keys() if key in fg
         }

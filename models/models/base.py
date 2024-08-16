@@ -1,5 +1,6 @@
 """Base model"""
 
+from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column
@@ -31,10 +32,18 @@ class Base(db.Model):
     @classmethod
     def all(cls):
         """Get all entries for the object."""
-        return db.session.scalar(select(cls))
+        return db.session.scalars(select(cls)).all()
 
     @classmethod
-    def last_updated(cls):
+    def find(cls, **kwargs):
+        """Find a single entry that matches the passed args."""
+        stmt = select(cls)
+        for key, value in kwargs.items():
+            stmt = stmt.where(getattr(cls, key) == value)
+        return db.session.scalars(stmt).first()
+
+    @classmethod
+    def last_updated(cls) -> datetime:
         """Get the datestamp of the most recently updated entry."""
         stmt = select(cls.updated_at).order_by(cls.updated_at.desc())
         return db.session.scalar(stmt)

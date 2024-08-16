@@ -1,5 +1,7 @@
 """Fixture model"""
 
+from __future__ import annotations
+
 from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -32,15 +34,18 @@ class Fixture(Base):
     season: Mapped[Optional[int]]
 
     # Foreign keys
-    gameweek: Mapped[int] = mapped_column(
+    gameweek_id: Mapped[int] = mapped_column(
         db.ForeignKey("gameweeks.id"), sort_order=-1
     )
-    team_a: Mapped[int] = mapped_column(
+    team_a_id: Mapped[int] = mapped_column(
         db.ForeignKey("teams.id"), sort_order=-1
     )
-    team_h: Mapped[int] = mapped_column(
+    team_h_id: Mapped[int] = mapped_column(
         db.ForeignKey("teams.id"), sort_order=-1
     )
+
+    # Relationships
+    gameweek: Mapped["Gameweek"] = db.relationship()  # noqa: F821
 
     # Methods
     @classmethod

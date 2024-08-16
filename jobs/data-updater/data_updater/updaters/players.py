@@ -18,11 +18,11 @@ async def update(fpl: FPL):
     players = []
     for fp in fpl_players:
         fp["fpl_id"] = fp["id"]
-        fp["season"] = Configuration.get_value_for(name="season")
-        fp["position"] = Position.find_by_fpl_id(
-            fp["element_type"], fp["season"]
+        fp["season"] = Configuration.get("season")
+        fp["position"] = Position.find(
+            fpl_id=fp["element_type"], season=fp["season"]
         ).id
-        fp["team"] = Team.find_by_fpl_id(fp["team"], fp["season"]).id
+        fp["team"] = Team.find(fpl_id=fp["team"], season=fp["season"]).id
         player = {key: fp[key] for key in Player.__dict__.keys() if key in fp}
         players.append(player)
     Player.bulk_upsert(players)

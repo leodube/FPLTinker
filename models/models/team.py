@@ -50,13 +50,3 @@ class Team(Base):
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["code"]
-
-    @classmethod
-    def find_by_fpl_id(cls, fpl_id: int, season: int) -> Team:
-        """Return the team matching the fpl_id and season"""
-        return (
-            db.session.query(Team)
-            .filter(Team.fpl_id == fpl_id)
-            .filter(Team.season == season)
-            .one_or_none()
-        )

@@ -37,6 +37,14 @@ class Configuration(Base):
         return ["name"]
 
     @classmethod
+    def get(cls, name: str) -> any:
+        """Return the value in the correct type for the configuration matching
+        the name."""
+        if not (config := cls.find_by_name(name)):
+            return None
+        return cls.cast_value(config.value, config._type)
+
+    @classmethod
     def find_by_name(cls, name: str) -> Configuration:
         """Return the configuration matching the name"""
         return (
@@ -44,14 +52,6 @@ class Configuration(Base):
             .filter(Configuration.name == name)
             .one_or_none()
         )
-
-    @classmethod
-    def get_value_for(cls, name: str) -> any:
-        """Return the value in the correct type for the configuration matching
-        the name."""
-        if not (config := cls.find_by_name(name)):
-            return None
-        return cls.cast_value(config.value, config._type)
 
     @classmethod
     def cast_value(cls, value: str, _type: ConfigurationTypes) -> any:

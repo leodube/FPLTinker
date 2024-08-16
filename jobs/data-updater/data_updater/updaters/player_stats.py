@@ -17,11 +17,11 @@ async def update(fpl: FPL):
     # Update player stats
     player_stats = []
     for fp in fpl_players:
-        fp["season"] = Configuration.get_value_for(name="season")
+        fp["season"] = Configuration.get("season")
         stat = {
             key: fp[key] for key in PlayerStats.__dict__.keys() if key in fp
         }
-        stat["player_id"] = Player.find_by_fpl_id(fp["id"], fp["season"]).id
+        stat["player_id"] = Player.find(fpl_id=fp["id"], season=fp["season"]).id
         player_stats.append(stat)
     PlayerStats.bulk_upsert(player_stats)
 

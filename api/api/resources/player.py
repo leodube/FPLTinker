@@ -3,10 +3,10 @@
 from flask import jsonify
 from flask_restx import Namespace, Resource
 
-API = Namespace("Players", description="FPL Players")
+api = Namespace("Players", description="FPL Players")
 
 
-@API.route("/")
+@api.route("/")
 class Player(Resource):
     """Description."""
 

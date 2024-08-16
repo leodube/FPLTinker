@@ -22,10 +22,12 @@ async def update(fpl: FPL):
     for ff in fpl_fixtures:
         ff["fpl_id"] = ff["id"]
         ff["stats"] = json.dumps(ff["stats"]) if ff["stats"] else "[]"
-        ff["gameweek"] = Gameweek.find_by_fpl_id(ff["event"]).id
-        ff["season"] = Configuration.get_value_for(name="season")
-        ff["team_a"] = Team.find_by_fpl_id(ff["team_a"], ff["season"]).id
-        ff["team_h"] = Team.find_by_fpl_id(ff["team_h"], ff["season"]).id
+        ff["season"] = Configuration.get("season")
+        ff["gameweek"] = Gameweek.find(
+            fpl_id=ff["event"], season=ff["season"]
+        ).id
+        ff["team_a"] = Team.find(fpl_id=ff["team_a"], season=ff["season"]).id
+        ff["team_h"] = Team.find(fpl_id=ff["team_h"], season=ff["season"]).id
         fixture = {key: ff[key] for key in Fixture.__dict__.keys() if key in ff}
         fixtures.append(fixture)
     Fixture.bulk_upsert(fixtures)
