@@ -2,14 +2,15 @@
 
 import json
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration, Fixture, Gameweek, Team
 
-from .utils.date_utilities import is_today
 
-
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the fixtures fom the FPL api"""
+    app.logger.debug("Updating fixtures.")
+
     # FUTURE: fdr = await fpl.FDR()
     fpl_fixtures = await fpl.get_fixtures(return_json=True)
 
@@ -26,7 +27,10 @@ async def update(fpl: FPL):
         ff["team_h_id"] = Team.find(fpl_id=ff["team_h"], season=ff["season"]).id
         fixture = {key: ff[key] for key in Fixture.__dict__.keys() if key in ff}
         fixtures.append(fixture)
-    Fixture.bulk_upsert(fixtures)
+    updated = Fixture.bulk_upsert(fixtures)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {Fixture.count()} total entries."
+    )
 
 
 # Unconsumed properties returned by FPL api

@@ -41,6 +41,7 @@ class DetailedMarshal:
     player: dict = {
         "team": fields.Nested(BaseMarshal.team),
         "position": fields.Nested(BaseMarshal.position),
+        "stats": fields.Nested(BaseMarshal.player_stats),
     }
 
     position: dict = {

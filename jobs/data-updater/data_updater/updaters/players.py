@@ -1,14 +1,14 @@
 """The database updater for the player model"""
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration, Player, Position, Team
 
-from .utils.date_utilities import is_today
-from pprint import pprint
 
-
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the players fom the FPL api"""
+    app.logger.debug("Updating players.")
+
     fpl_players = await fpl.get_players(return_json=True)
 
     # Update players
@@ -23,7 +23,10 @@ async def update(fpl: FPL):
         player = {key: fp[key] for key in Player.__dict__.keys() if key in fp}
         del player["team"]
         players.append(player)
-    Player.bulk_upsert(players)
+    updated = Player.bulk_upsert(players)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {Player.count()} total entries."
+    )
 
 
 # Unconsumed properties returned by FPL api

@@ -118,45 +118,49 @@ class BaseMarshal:
         "creativity": fields.Fixed(decimals=1),
         "dreamteam_count": fields.Integer(attribute="dreamteam_count"),
         "event_points": fields.Integer(attribute="event_points"),
-        "expected_assists": fields.Integer(attribute="expected_assists"),
-        "expected_assists_per_90": fields.Integer(
-            attribute="expected_assists_per_90"
+        "expected_assists": fields.Fixed(
+            decimal=2, attribute="expected_assists"
         ),
-        "expected_goal_involvements": fields.Integer(
-            attribute="expected_goal_involvements"
+        "expected_assists_per_90": fields.Fixed(
+            decimal=2, attribute="expected_assists_per_90"
         ),
-        "expected_goal_involvements_per_90": fields.Integer(
-            attribute="expected_goal_involvements_per_90"
+        "expected_goal_involvements": fields.Fixed(
+            decimal=2, attribute="expected_goal_involvements"
         ),
-        "expected_goals": fields.Integer(attribute="expected_goals"),
-        "expected_goals_per_90": fields.Integer(
-            attribute="expected_goals_per_90"
+        "expected_goal_involvements_per_90": fields.Fixed(
+            decimal=2, attribute="expected_goal_involvements_per_90"
         ),
-        "expected_goals_conceded": fields.Integer(
-            attribute="expected_goals_conceded"
+        "expected_goals": fields.Fixed(decimal=2, attribute="expected_goals"),
+        "expected_goals_per_90": fields.Fixed(
+            decimal=2, attribute="expected_goals_per_90"
         ),
-        "expected_goals_conceded_per_90": fields.Integer(
-            attribute="expected_goals_conceded_per_90"
+        "expected_goals_conceded": fields.Fixed(
+            decimal=2, attribute="expected_goals_conceded"
+        ),
+        "expected_goals_conceded_per_90": fields.Fixed(
+            decimal=2, attribute="expected_goals_conceded_per_90"
         ),
         "goals_conceded": fields.Integer(attribute="goals_conceded"),
-        "goals_conceded_per_90": fields.Integer(
-            attribute="goals_conceded_per_90"
+        "goals_conceded_per_90": fields.Fixed(
+            decimal=2, attribute="goals_conceded_per_90"
         ),
         "goals_scored": fields.Integer(attribute="goals_scored"),
-        "ict_index": fields.Integer(attribute="ict_index"),
-        "influence": fields.Integer(),
+        "ict_index": fields.Fixed(decimal=1, attribute="ict_index"),
+        "influence": fields.Fixed(decimal=1),
         "minutes": fields.Integer(),
         "now_cost": fields.Integer(attribute="now_cost"),
         "own_goals": fields.Integer(attribute="own_goals"),
         "penalties_missed": fields.Integer(attribute="penalties_missed"),
         "penalties_saved": fields.Integer(attribute="penalties_saved"),
-        "points_per_game": fields.Integer(attribute="points_per_game"),
+        "points_per_game": fields.Fixed(decimal=1, attribute="points_per_game"),
         "red_cards": fields.Integer(attribute="red_cards"),
         "saves": fields.Integer(),
         "saves_per_90": fields.Integer(attribute="saves_per_90"),
-        "selected_by_percent": fields.Integer(attribute="selected_by_percent"),
+        "selected_by_percent": fields.Fixed(
+            decimal=1, attribute="selected_by_percent"
+        ),
         "starts": fields.Integer(attribute="player_id"),
-        "starts_per_90": fields.Integer(attribute="starts_per_90"),
+        "starts_per_90": fields.Fixed(decimal=2, attribute="starts_per_90"),
         "threat": fields.Integer(),
         "total_points": fields.Integer(attribute="total_points"),
         "transfers_in": fields.Integer(attribute="transfers_in"),
@@ -164,7 +168,7 @@ class BaseMarshal:
         "transfers_out": fields.Integer(attribute="transfers_out"),
         "transfers_out_event": fields.Integer(attribute="transfers_out_event"),
         "value_form": fields.Integer(attribute="value_form"),
-        "value_season": fields.Integer(attribute="value_season"),
+        "value_season": fields.Fixed(decimal=1, attribute="value_season"),
         "yellow_cards": fields.Integer(attribute="yellow_cards"),
         "season": fields.Integer,
     }

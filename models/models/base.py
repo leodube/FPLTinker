@@ -35,12 +35,14 @@ class Base(db.Model):
         return db.session.scalars(select(cls)).all()
 
     @classmethod
+    def count(cls, **kwargs):
+        """Count the number of entries that match the passed args."""
+        return len(cls.find_all(**kwargs).all())
+
+    @classmethod
     def find(cls, **kwargs):
         """Find a single entry that matches the passed args."""
-        stmt = select(cls)
-        for key, value in kwargs.items():
-            stmt = stmt.where(getattr(cls, key) == value)
-        return db.session.scalars(stmt).first()
+        return cls.find_all(**kwargs).first()
 
     @classmethod
     def find_all(cls, **kwargs):
@@ -72,7 +74,7 @@ class Base(db.Model):
         return vals
 
     @classmethod
-    def bulk_upsert(cls, rows):
+    def bulk_upsert(cls, rows) -> list:
         """Insert multiple rows in the database from an array of dictionaries.
         If a conflicting entry is found, update that entry instead."""
         stmt = insert(cls).values(rows)
@@ -80,5 +82,6 @@ class Base(db.Model):
             index_elements=cls.index_constraints(),
             set_=cls.on_conflict_set({**stmt.excluded}),
         ).returning(cls)
-        db.session.execute(stmt)
+        objs = db.session.scalars(stmt)
         db.session.commit()
+        return objs.all()

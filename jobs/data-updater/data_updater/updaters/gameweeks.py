@@ -1,13 +1,14 @@
 """The database updater for the gameweek model"""
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration, Gameweek
 
-from .utils.date_utilities import is_today
 
-
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the gameweeks fom the FPL api"""
+    app.logger.debug("Updating gameweeks.")
+
     fpl_gameweeks = await fpl.get_gameweeks(include_live=True, return_json=True)
 
     # Update gameweeks
@@ -19,7 +20,10 @@ async def update(fpl: FPL):
             key: fg[key] for key in Gameweek.__dict__.keys() if key in fg
         }
         gameweeks.append(gameweek)
-    Gameweek.bulk_upsert(gameweeks)
+    updated = Gameweek.bulk_upsert(gameweeks)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {Gameweek.count()} total entries."
+    )
 
 
 # Unconsumed properties returned by FPL api

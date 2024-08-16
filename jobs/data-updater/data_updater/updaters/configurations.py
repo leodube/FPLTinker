@@ -2,19 +2,23 @@
 
 from datetime import datetime
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration
 
-from .utils.date_utilities import is_today
 from .utils.config_details import get_config_details
+from .utils.date_utilities import is_today
 
 
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the configurations"""
+    app.logger.debug("Updating configurations.")
+
     # Return if updater already ran today
     if (last_updated := Configuration.last_updated()) and is_today(
         last_updated
     ):
+        app.logger.debug("Already updated configurations today. Skipping.")
         return
 
     configurations = []
@@ -30,4 +34,7 @@ async def update(fpl: FPL):
         season_config["value"] = str(current_year) + str(current_year + 1)
         configurations.append(season_config)
 
-    Configuration.bulk_upsert(configurations)
+    updated = Configuration.bulk_upsert(configurations)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {Configuration.count()} total entries."
+    )

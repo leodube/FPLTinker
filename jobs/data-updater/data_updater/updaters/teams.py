@@ -1,13 +1,14 @@
 """The database updater for the team model"""
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration, Team
 
-from .utils.date_utilities import is_today
 
-
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the teams fom the FPL api"""
+    app.logger.debug("Updating teams.")
+
     fpl_teams = await fpl.get_teams(return_json=True)
 
     # Update teams
@@ -17,7 +18,10 @@ async def update(fpl: FPL):
         ft["season"] = Configuration.get("season")
         team = {key: ft[key] for key in Team.__dict__.keys() if key in ft}
         teams.append(team)
-    Team.bulk_upsert(teams)
+    updated = Team.bulk_upsert(teams)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {Team.count()} total entries."
+    )
 
 
 # Unconsumed properties returned by FPL api

@@ -3,9 +3,7 @@
 import aiohttp
 from flask import Flask
 from fpl import FPL
-from models import db
 
-from data_updater.config import Config
 from data_updater.updaters import (
     configurations,
     fixtures,
@@ -18,23 +16,17 @@ from data_updater.updaters import (
 )
 
 
-def create_app():
-    """Return a configured Flask App using the Factory method."""
-    app = Flask(__name__)
-    app.config.from_object(Config)
-    db.init_app(app)
-    return app
-
-
-async def run():
+async def run(app: Flask):
     """Run the data updater worker"""
     async with aiohttp.ClientSession() as session:
+        app.logger.debug("Running data updater.")
         fpl = FPL(session)
-        await configurations.update(fpl)
-        await teams.update(fpl)
-        await gameweeks.update(fpl)
-        await fixtures.update(fpl)
-        await positions.update(fpl)
-        await players.update(fpl)
-        await player_stats.update(fpl)
-        stat_details.update()
+        await configurations.update(app, fpl)
+        await teams.update(app, fpl)
+        await gameweeks.update(app, fpl)
+        await fixtures.update(app, fpl)
+        await positions.update(app, fpl)
+        await players.update(app, fpl)
+        await player_stats.update(app, fpl)
+        stat_details.update(app)
+        app.logger.debug("Finished running data updater.")

@@ -1,14 +1,14 @@
 """The database updater for the player stats model"""
 
+from flask import Flask
 from fpl import FPL
 from models import Configuration, Player, PlayerStats
 
-from .utils.date_utilities import is_today
 
-
-async def update(fpl: FPL):
+async def update(app: Flask, fpl: FPL):
     """Updates the player stats fom the FPL api"""
-    # Return if updater already ran today
+    app.logger.debug("Updating player stats.")
+
     fpl_players = await fpl.get_players(return_json=True)
 
     # Update player stats
@@ -21,7 +21,10 @@ async def update(fpl: FPL):
         stat["player_id"] = Player.find(fpl_id=fp["id"], season=fp["season"]).id
         del stat["id"]
         player_stats.append(stat)
-    PlayerStats.bulk_upsert(player_stats)
+    updated = PlayerStats.bulk_upsert(player_stats)
+    app.logger.debug(
+        f"Successfully updated {len(updated)} out of {PlayerStats.count()} total entries."
+    )
 
 
 # Unconsumed properties returned by FPL api
