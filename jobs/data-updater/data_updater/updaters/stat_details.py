@@ -2,8 +2,8 @@
 
 from flask import Flask
 from models import PlayerStats, StatDetails
-from sqlalchemy.exc import SQLAlchemyError
 
+from .utils.db_utilities import apply_update
 from .utils.stat_details import get_stat_details
 
 
@@ -19,12 +19,4 @@ def update(app: Flask):
         if details_dict := get_stat_details(sn):
             stat_details.append({"name": sn, **details_dict})
 
-    try:
-        updated = StatDetails.bulk_upsert(stat_details)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{StatDetails.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        StatDetails.rollback()
-        app.logger.error(f"Failed to update stat details. See error: {err}")
+    apply_update(app, StatDetails, stat_details)

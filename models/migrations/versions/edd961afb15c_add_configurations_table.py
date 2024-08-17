@@ -41,7 +41,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="configurations_pkey"),
         sa.UniqueConstraint("name"),
     )
     # ### end Alembic commands ###

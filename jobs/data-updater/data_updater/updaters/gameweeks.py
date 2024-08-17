@@ -3,7 +3,8 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Gameweek, Player
-from sqlalchemy.exc import SQLAlchemyError
+
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -23,24 +24,15 @@ async def update(app: Flask, fpl: FPL):
         # Set foreign key attributes
         g["top_player_id"] = None
         if g["top_element"]:
-            g["top_player_id"] = Player.find(
-                fpl_id=g["top_element"], season=season
-            ).id
+            g["top_player_id"] = Player.find(fpl_id=g["top_element"], season=season).id
 
         # Generate dict and add to list
         keys = Gameweek.__dict__.keys()
         gameweek = {key: g[key] for key in keys if key in g}
         gameweeks.append(gameweek)
 
-    try:
-        updated = Gameweek.bulk_upsert(gameweeks)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{Gameweek.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Gameweek.rollback()
-        app.logger.error(f"Failed to update gameweeks. See error: {err}")
+    # Apply updates to db
+    apply_update(app, Gameweek, gameweeks)
 
 
 # Unconsumed properties returned by FPL api

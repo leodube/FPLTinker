@@ -5,10 +5,10 @@ from datetime import datetime
 from flask import Flask
 from fpl import FPL
 from models import Configuration
-from sqlalchemy.exc import SQLAlchemyError
 
 from .utils.config_details import get_config_details
 from .utils.date_utilities import is_today
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -16,9 +16,7 @@ async def update(app: Flask, fpl: FPL):
     app.logger.debug("Updating configurations.")
 
     # Return if updater already ran today
-    if (last_updated := Configuration.last_updated()) and is_today(
-        last_updated
-    ):
+    if (last_updated := Configuration.last_updated()) and is_today(last_updated):
         app.logger.debug("Already updated configurations today. Skipping.")
         return
 
@@ -35,12 +33,5 @@ async def update(app: Flask, fpl: FPL):
         season_config["value"] = str(current_year) + str(current_year + 1)
         configurations.append(season_config)
 
-    try:
-        updated = Configuration.bulk_upsert(configurations)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{Configuration.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Configuration.rollback()
-        app.logger.error(f"Failed to update configurations. See error: {err}")
+    # Apply updates to db
+    apply_update(app, Configuration, configurations)

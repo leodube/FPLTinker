@@ -3,9 +3,9 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Position
-from sqlalchemy.exc import SQLAlchemyError
 
 from .utils.date_utilities import is_today
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -32,15 +32,7 @@ async def update(app: Flask, fpl: FPL):
         position = {key: p[key] for key in keys if key in p}
         positions.append(position)
 
-    try:
-        updated = Position.bulk_upsert(positions)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{Position.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Position.rollback()
-        app.logger.error(f"Failed to update positions. See error: {err}")
+    apply_update(app, Position, positions)
 
 
 # Unconsumed properties returned by FPL api

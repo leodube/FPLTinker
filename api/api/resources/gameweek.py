@@ -1,4 +1,4 @@
-"""Description."""
+"""Contains Fantasy Premiere League gameweek api resource."""
 
 from flask_restx import Namespace, Resource
 from models import Configuration, Gameweek

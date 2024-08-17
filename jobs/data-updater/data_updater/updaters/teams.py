@@ -3,7 +3,8 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Team
-from sqlalchemy.exc import SQLAlchemyError
+
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -25,14 +26,7 @@ async def update(app: Flask, fpl: FPL):
         team = {key: t[key] for key in keys if key in t}
         teams.append(team)
 
-    try:
-        updated = Team.bulk_upsert(teams)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of {Team.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Team.rollback()
-        app.logger.error(f"Failed to update teams. See error: {err}")
+    apply_update(app, Team, teams)
 
 
 # Unconsumed properties returned by FPL api

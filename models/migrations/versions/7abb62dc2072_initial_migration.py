@@ -33,7 +33,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="fixture_stats_pkey"),
     )
     op.create_table(
         "gameweeks",
@@ -71,7 +71,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="gameweeks_pkey"),
         sa.UniqueConstraint("fpl_id", "season"),
     )
     op.create_table(
@@ -100,7 +100,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="positions_pkey"),
     )
     op.create_table(
         "stat_details",
@@ -120,7 +120,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="stat_details_pkey"),
     )
     op.create_table(
         "teams",
@@ -158,7 +158,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="teams_pkey"),
         sa.UniqueConstraint("code"),
         sa.UniqueConstraint("fpl_id"),
     )
@@ -177,7 +177,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="tinkers_pkey"),
     )
     op.create_table(
         "weightings",
@@ -194,7 +194,7 @@ def upgrade():
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="weightings_pkey"),
     )
     op.create_table(
         "fixtures",
@@ -244,7 +244,7 @@ def upgrade():
             ["team_h"],
             ["teams.id"],
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="fixtures_pkey"),
         sa.UniqueConstraint("code"),
     )
     op.create_table(
@@ -290,7 +290,7 @@ def upgrade():
             ["team"],
             ["teams.id"],
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="players_pkey"),
         sa.UniqueConstraint("code"),
     )
     op.create_table(
@@ -360,7 +360,7 @@ def upgrade():
             ["player_id"],
             ["players.id"],
         ),
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint("id", name="player_stats_pkey"),
     )
     # ### end Alembic commands ###
 

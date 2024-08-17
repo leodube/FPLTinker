@@ -1,4 +1,4 @@
-"""Description."""
+"""Contains Fantasy Premiere League stat details api resource."""
 
 from flask_restx import Namespace, Resource
 from models import StatDetails

@@ -1,11 +1,11 @@
-"""Description"""
+"""Contains Flask-RestX custom marshalling fields."""
 
 from flask_restx import fields
 from models import Configuration, Team
 
 
 class TeamField(fields.Raw):
-    """Description"""
+    """Custom FPL team marshalling field."""
 
     def format(self, value):
         team = Team.find(fpl_id=value, season=Configuration.get("season"))

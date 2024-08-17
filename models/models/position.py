@@ -15,9 +15,10 @@ class Position(Base, WithTimestamps):
 
     __versioned__ = {}
     __tablename__ = "positions"
+    __table_args__ = (db.UniqueConstraint("fpl_id", "season"),)
 
     # FPL api properties
-    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1, primary_key=True)
     plural_name: Mapped[str]
     plural_name_short: Mapped[str]
     singular_name: Mapped[str]
@@ -29,7 +30,7 @@ class Position(Base, WithTimestamps):
     element_count: Mapped[int]
 
     # Additional properties
-    season: Mapped[Optional[int]]
+    season: Mapped[Optional[int]] = mapped_column(primary_key=True)
 
     # Relationships
     players: Mapped[List["Player"]] = db.relationship(back_populates="position")
@@ -39,4 +40,4 @@ class Position(Base, WithTimestamps):
     def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
-        return ["fpl_id", "sesason"]
+        return ["fpl_id", "season"]

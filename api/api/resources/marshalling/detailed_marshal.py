@@ -1,4 +1,4 @@
-"""Description"""
+"""Contains Flask-RestX detailed response marshalling."""
 
 from flask_restx import fields
 
@@ -7,7 +7,7 @@ from .fields import TeamField
 
 
 class DetailedMarshal:  # pylint: disable=too-few-public-methods
-    """Description"""
+    """The marshalling object that contains the input layouts."""
 
     fixture: dict = {
         "teams": {

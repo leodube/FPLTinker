@@ -1,10 +1,10 @@
-"""Description"""
+"""Contains Flask-RestX base response marshalling."""
 
 from flask_restx import fields
 
 
 class BaseMarshal:  # pylint: disable=too-few-public-methods
-    """Description"""
+    """The marshalling object that contains the input layouts."""
 
     fixture: dict = {
         "fplId": fields.Integer(attribute="fpl_id"),

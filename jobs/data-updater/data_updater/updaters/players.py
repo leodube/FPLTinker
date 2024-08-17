@@ -3,7 +3,8 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Player, Position, Team
-from sqlalchemy.exc import SQLAlchemyError
+
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -21,9 +22,7 @@ async def update(app: Flask, fpl: FPL):
         p["season"] = season
 
         # Set foreign key attributes
-        p["position_id"] = Position.find(
-            fpl_id=p["element_type"], season=season
-        ).id
+        p["position_id"] = Position.find(fpl_id=p["element_type"], season=season).id
         p["team_id"] = Team.find(fpl_id=p["team"], season=season).id
 
         # Delete conflicts
@@ -34,15 +33,8 @@ async def update(app: Flask, fpl: FPL):
         player = {key: p[key] for key in keys if key in p}
         players.append(player)
 
-    try:
-        updated = Player.bulk_upsert(players)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{Player.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Player.rollback()
-        app.logger.error(f"Failed to update players. See error: {err}")
+    # Apply updates to db
+    apply_update(app, Player, players)
 
 
 # Unconsumed properties returned by FPL api

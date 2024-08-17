@@ -3,7 +3,8 @@
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Fixture, Gameweek, Team
-from sqlalchemy.exc import SQLAlchemyError
+
+from .utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
@@ -35,12 +36,6 @@ async def update(app: Flask, fpl: FPL):
 
         # Add to list
         fixtures.append(fixture)
-    try:
-        updated = Fixture.bulk_upsert(fixtures)
-        app.logger.debug(
-            f"Successfully updated {len(updated)} out of "
-            f"{Fixture.count()} total entries."
-        )
-    except SQLAlchemyError as err:
-        Fixture.rollback()
-        app.logger.error(f"Failed to update fixtures. See error: {err}")
+
+    # Apply updates to db
+    apply_update(app, Fixture, fixtures)
