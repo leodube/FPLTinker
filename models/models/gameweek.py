@@ -3,15 +3,16 @@
 # pylint: disable=unsubscriptable-object
 
 from __future__ import annotations
+
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base, timestamp
-from .db import db
+from .base import Base, WithTimestamps
+from .db import db, optional_timestamp, timestamp
 
 
-class Gameweek(Base):
+class Gameweek(Base, WithTimestamps):
     """A class representing a gameweek in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -36,17 +37,17 @@ class Gameweek(Base):
     most_selected: Mapped[Optional[int]]
     most_transferred_in: Mapped[Optional[int]]
     most_vice_captained: Mapped[Optional[int]]
-    release_time: Mapped[Optional[timestamp]]
-    top_element: Mapped[Optional[int]]
-    top_element_info: Mapped[Optional[str]]
+    release_time: Mapped[optional_timestamp]
+
+    # Foreign Keys
+    top_player_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey("players.id"))
 
     # Additional properties
     season: Mapped[Optional[int]]
 
     # Relationships
-    fixtures: Mapped[List["Fixture"]] = db.relationship(
-        back_populates="gameweek"
-    )  # noqa: F821
+    fixtures: Mapped[List["Fixture"]] = db.relationship(back_populates="gameweek")
+    top_player: Mapped["Player"] = db.relationship(viewonly=True)
 
     # Methods
     @classmethod

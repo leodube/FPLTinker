@@ -7,11 +7,11 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db
 
 
-class Configuration(Base):
+class Configuration(Base, WithTimestamps):
     """A class representing a configuration for the application."""
 
     __versioned__ = {}
@@ -42,7 +42,9 @@ class Configuration(Base):
         the name."""
         if not (config := cls.find_by_name(name)):
             return None
-        return cls.cast_value(config.value, config._type)
+        return cls.cast_value(
+            config.value, config._type  # pylint: disable=protected-access
+        )
 
     @classmethod
     def find_by_name(cls, name: str) -> Configuration:
@@ -65,5 +67,8 @@ class Configuration(Base):
                 return value
             case _:
                 raise ValueError(
-                    f"Cannot cast type {_type}. Make sure the type exists in the ConfigurationTypes enum."
+                    (
+                        f"Cannot cast type {_type}. Make sure the type exists "
+                        "in the ConfigurationTypes enum."
+                    )
                 )

@@ -6,6 +6,7 @@ from fpl import FPL
 
 from data_updater.updaters import (
     configurations,
+    fixture_stats,
     fixtures,
     gameweeks,
     player_stats,
@@ -25,6 +26,7 @@ async def run(app: Flask):
         await teams.update(app, fpl)
         await gameweeks.update(app, fpl)
         await fixtures.update(app, fpl)
+        await fixture_stats.update(app, fpl)
         await positions.update(app, fpl)
         await players.update(app, fpl)
         await player_stats.update(app, fpl)

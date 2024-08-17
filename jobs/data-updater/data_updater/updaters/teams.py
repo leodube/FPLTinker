@@ -10,14 +10,19 @@ async def update(app: Flask, fpl: FPL):
     """Updates the teams fom the FPL api"""
     app.logger.debug("Updating teams.")
 
-    fpl_teams = await fpl.get_teams(return_json=True)
+    api_teams = await fpl.get_teams(return_json=True)
+    season = Configuration.get("season")
 
     # Update teams
     teams = []
-    for ft in fpl_teams:
-        ft["fpl_id"] = ft["id"]
-        ft["season"] = Configuration.get("season")
-        team = {key: ft[key] for key in Team.__dict__.keys() if key in ft}
+    for t in api_teams:
+        # Set base attributes
+        t["fpl_id"] = t["id"]
+        t["season"] = season
+
+        # Generate dict and add to list
+        keys = Team.__dict__.keys()
+        team = {key: t[key] for key in keys if key in t}
         teams.append(team)
 
     try:
@@ -26,6 +31,7 @@ async def update(app: Flask, fpl: FPL):
             f"Successfully updated {len(updated)} out of {Team.count()} total entries."
         )
     except SQLAlchemyError as err:
+        Team.rollback()
         app.logger.error(f"Failed to update teams. See error: {err}")
 
 

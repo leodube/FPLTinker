@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db, timestamp
 
 
-class Fixture(Base):
+class Fixture(Base, WithTimestamps):
     """A class representing a fixture in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -37,17 +37,14 @@ class Fixture(Base):
     gameweek_id: Mapped[int] = mapped_column(
         db.ForeignKey("gameweeks.id"), sort_order=-1
     )
-    team_a_id: Mapped[int] = mapped_column(
-        db.ForeignKey("teams.id"), sort_order=-1
-    )
-    team_h_id: Mapped[int] = mapped_column(
-        db.ForeignKey("teams.id"), sort_order=-1
-    )
+    team_a_id: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
+    team_h_id: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
 
     # Relationships
     gameweek: Mapped["Gameweek"] = db.relationship(
         back_populates="fixtures", viewonly=True
-    )  # noqa: F821
+    )
+    stats: Mapped[List["FixtureStats"]] = db.relationship()
 
     # Methods
     @classmethod

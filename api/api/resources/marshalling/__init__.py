@@ -1,3 +1,5 @@
+"""Description"""
+
 from .base_marshal import BaseMarshal
 from .detailed_marshal import DetailedMarshal
 

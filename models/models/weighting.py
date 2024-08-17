@@ -1,9 +1,9 @@
 """Weighting Model"""
 
-from .base import Base
+from .base import Base, WithTimestamps
 
 
-class Weighting(Base):
+class Weighting(Base, WithTimestamps):
     """A class containing the user-defined stat weightings."""
 
     __versioned__ = {}

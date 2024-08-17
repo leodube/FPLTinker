@@ -10,25 +10,31 @@ async def update(app: Flask, fpl: FPL):
     """Updates the player stats fom the FPL api"""
     app.logger.debug("Updating player stats.")
 
-    fpl_players = await fpl.get_players(return_json=True)
+    api_players = await fpl.get_players(return_json=True)
+    season = Configuration.get("season")
 
     # Update player stats
     player_stats = []
-    for fp in fpl_players:
-        fp["season"] = Configuration.get("season")
-        stat = {
-            key: fp[key] for key in PlayerStats.__dict__.keys() if key in fp
-        }
-        stat["player_id"] = Player.find(fpl_id=fp["id"], season=fp["season"]).id
-        del stat["id"]
+    for p in api_players:
+        # Set base attributes
+        p["season"] = season
+
+        # Set foreign key attributes
+        p["player_id"] = Player.find(fpl_id=p["id"], season=season).id
+
+        # Generate dict and add to list
+        keys = PlayerStats.__dict__.keys()
+        stat = {key: p[key] for key in keys if key in p}
         player_stats.append(stat)
 
     try:
         updated = PlayerStats.bulk_upsert(player_stats)
         app.logger.debug(
-            f"Successfully updated {len(updated)} out of {PlayerStats.count()} total entries."
+            f"Successfully updated {len(updated)} out of "
+            f"{PlayerStats.count()} total entries."
         )
     except SQLAlchemyError as err:
+        PlayerStats.rollback()
         app.logger.error(f"Failed to update player stats. See error: {err}")
 
 

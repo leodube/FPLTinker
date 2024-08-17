@@ -7,8 +7,8 @@ from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Fixtures", description="FPL Fixtures")
 
-base_model = api.model("BaseModel", BaseMarshal.fixture)
-detailed_model = base_model.clone("DetailedModel", DetailedMarshal.fixture)
+base_model = api.model("FixtureBaseModel", BaseMarshal.fixture)
+detailed_model = base_model.clone("FixtureDetailedModel", DetailedMarshal.fixture)
 
 
 @api.route("/")
@@ -30,7 +30,5 @@ class FixtureResource(Resource):
     @api.marshal_with(detailed_model)
     def get(self, fpl_id):
         """Get a fixture by it's Fpl identifier."""
-        fixture = Fixture.find(
-            fpl_id=fpl_id, season=Configuration.get("season")
-        )
+        fixture = Fixture.find(fpl_id=fpl_id, season=Configuration.get("season"))
         return fixture

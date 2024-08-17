@@ -6,11 +6,11 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db
 
 
-class Player(Base):
+class Player(Base, WithTimestamps):
     """A class representing a player in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -39,23 +39,17 @@ class Player(Base):
     season: Mapped[Optional[int]]
 
     # Foreign keys
-    team_id: Mapped[int] = mapped_column(
-        db.ForeignKey("teams.id"), sort_order=-1
-    )
+    team_id: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)
     position_id: Mapped[int] = mapped_column(
         db.ForeignKey("positions.id"), sort_order=-1
     )
 
     # Relationships
-    stats: Mapped[List["PlayerStats"]] = db.relationship(
-        back_populates="player"
-    )  # noqa: F821
+    stats: Mapped[List["PlayerStats"]] = db.relationship(back_populates="player")
     position: Mapped["Position"] = db.relationship(
         back_populates="players", viewonly=True
-    )  # noqa: F821
-    team: Mapped["Team"] = db.relationship(
-        back_populates="players", viewonly=True
-    )  # noqa: F821
+    )
+    team: Mapped["Team"] = db.relationship(back_populates="players", viewonly=True)
 
     # Methods
     @classmethod

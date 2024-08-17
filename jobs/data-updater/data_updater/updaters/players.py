@@ -10,27 +10,38 @@ async def update(app: Flask, fpl: FPL):
     """Updates the players fom the FPL api"""
     app.logger.debug("Updating players.")
 
-    fpl_players = await fpl.get_players(return_json=True)
+    api_players = await fpl.get_players(return_json=True)
+    season = Configuration.get("season")
 
     # Update players
     players = []
-    for fp in fpl_players:
-        fp["fpl_id"] = fp["id"]
-        fp["season"] = Configuration.get("season")
-        fp["position_id"] = Position.find(
-            fpl_id=fp["element_type"], season=fp["season"]
+    for p in api_players:
+        # Set base attributes
+        p["fpl_id"] = p["id"]
+        p["season"] = season
+
+        # Set foreign key attributes
+        p["position_id"] = Position.find(
+            fpl_id=p["element_type"], season=season
         ).id
-        fp["team_id"] = Team.find(fpl_id=fp["team"], season=fp["season"]).id
-        player = {key: fp[key] for key in Player.__dict__.keys() if key in fp}
-        del player["team"]
+        p["team_id"] = Team.find(fpl_id=p["team"], season=season).id
+
+        # Delete conflicts
+        del p["team"]
+
+        # Generate dict and add to list
+        keys = Player.__dict__.keys()
+        player = {key: p[key] for key in keys if key in p}
         players.append(player)
 
     try:
         updated = Player.bulk_upsert(players)
         app.logger.debug(
-            f"Successfully updated {len(updated)} out of {Player.count()} total entries."
+            f"Successfully updated {len(updated)} out of "
+            f"{Player.count()} total entries."
         )
     except SQLAlchemyError as err:
+        Player.rollback()
         app.logger.error(f"Failed to update players. See error: {err}")
 
 

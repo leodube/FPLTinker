@@ -1,29 +1,12 @@
 """Description"""
 
 from flask_restx import fields
-from models import Configuration, Team
 
-from . import BaseMarshal
-
-
-class TeamField(fields.Raw):
-    def format(self, value):
-        team = Team.find(fpl_id=value, season=Configuration.get("season"))
-        return {
-            "fplId": team.fpl_id,
-            "name": team.name,
-            "shortName": team.short_name,
-            "position": team.position,
-            "points": team.points,
-            "played": team.played,
-            "win": team.win,
-            "draw": team.draw,
-            "loss": team.loss,
-            "form": team.form,
-        }
+from .base_marshal import BaseMarshal
+from .fields import TeamField
 
 
-class DetailedMarshal:
+class DetailedMarshal:  # pylint: disable=too-few-public-methods
     """Description"""
 
     fixture: dict = {
@@ -31,11 +14,14 @@ class DetailedMarshal:
             "away": TeamField(attribute="team_a_id"),
             "home": TeamField(attribute="team_h_id"),
         },
-        "gameweek": fields.Nested(BaseMarshal.fixture),
+        "gameweek": fields.Nested(BaseMarshal.gameweek),
     }
 
     gameweek: dict = {
-        "fixtures": fields.List(fields.Nested(BaseMarshal.gameweek))
+        "topPlayer": fields.Nested(
+            BaseMarshal.player, attribute="top_player", allow_null=True
+        ),
+        "fixtures": fields.List(fields.Nested(BaseMarshal.gameweek)),
     }
 
     player: dict = {
@@ -44,8 +30,6 @@ class DetailedMarshal:
         "stats": fields.Nested(BaseMarshal.player_stats),
     }
 
-    position: dict = {
-        "players": fields.List(fields.Nested(BaseMarshal.position))
-    }
+    position: dict = {"players": fields.List(fields.Nested(BaseMarshal.position))}
 
     team: dict = {"players": fields.List(fields.Nested(BaseMarshal.team))}

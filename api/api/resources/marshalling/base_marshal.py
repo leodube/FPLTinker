@@ -3,7 +3,7 @@
 from flask_restx import fields
 
 
-class BaseMarshal:
+class BaseMarshal:  # pylint: disable=too-few-public-methods
     """Description"""
 
     fixture: dict = {
@@ -45,16 +45,13 @@ class BaseMarshal:
         "rankedCount": fields.Integer(attribute="ranked_count"),
         "transfersMade": fields.Integer(attribute="transfers_made"),
         "highestScore": fields.Integer(attribute="highest_score"),
-        "highestScoringEntry": fields.Integer(
-            attribute="highest_scoring_entry"
-        ),
+        "highestScoringEntry": fields.Integer(attribute="highest_scoring_entry"),
         "mostCaptained": fields.Integer(attribute="most_captained"),
         "mostSelected": fields.Integer(attribute="most_selected"),
         "mostTransferredIn": fields.Integer(attribute="most_transferred_in"),
         "mostViceCaptained": fields.Integer(attribute="most_vice_captained"),
         "releaseTime": fields.DateTime(attribute="release_time"),
-        "topElement": fields.Integer(attribute="top_element"),
-        "topElementInfo": fields.String(attribute="top_element_info"),
+        "topPlayer": {"fplId": fields.Integer(attribute="top_player_id")},
         "season": fields.Integer,
     }
 
@@ -75,20 +72,12 @@ class BaseMarshal:
         "newsSdded": fields.String(attribute="news_added"),
         "penaltiesOrder": fields.Integer(attribute="penalties_order"),
         "chanceOfPlaying": {
-            "nextRound": fields.Integer(
-                attribute="chance_of_playing_next_round"
-            ),
-            "thisRound": fields.Integer(
-                attribute="chance_of_playing_this_round"
-            ),
+            "nextRound": fields.Integer(attribute="chance_of_playing_next_round"),
+            "thisRound": fields.Integer(attribute="chance_of_playing_this_round"),
         },
         "cornersAndIndirectFreekicks": {
-            "order": fields.Integer(
-                attribute="corners_and_indirect_freekicks_order"
-            ),
-            "text": fields.String(
-                attribute="corners_and_indirect_freekicks_text"
-            ),
+            "order": fields.Integer(attribute="corners_and_indirect_freekicks_order"),
+            "text": fields.String(attribute="corners_and_indirect_freekicks_text"),
         },
         "direcFreekicks": {
             "order": fields.Integer(attribute="direct_freekicks_order"),
@@ -108,19 +97,13 @@ class BaseMarshal:
             decimals=2, attribute="clean_sheets_per_90"
         ),
         "cost_change_event": fields.Integer(attribute="cost_change_event"),
-        "cost_change_event_fall": fields.Integer(
-            attribute="cost_change_event_fall"
-        ),
+        "cost_change_event_fall": fields.Integer(attribute="cost_change_event_fall"),
         "cost_change_start": fields.Integer(attribute="cost_change_start"),
-        "cost_change_start_fall": fields.Integer(
-            attribute="cost_change_start_fall"
-        ),
+        "cost_change_start_fall": fields.Integer(attribute="cost_change_start_fall"),
         "creativity": fields.Fixed(decimals=1),
         "dreamteam_count": fields.Integer(attribute="dreamteam_count"),
         "event_points": fields.Integer(attribute="event_points"),
-        "expected_assists": fields.Fixed(
-            decimal=2, attribute="expected_assists"
-        ),
+        "expected_assists": fields.Fixed(decimal=2, attribute="expected_assists"),
         "expected_assists_per_90": fields.Fixed(
             decimal=2, attribute="expected_assists_per_90"
         ),
@@ -156,9 +139,7 @@ class BaseMarshal:
         "red_cards": fields.Integer(attribute="red_cards"),
         "saves": fields.Integer(),
         "saves_per_90": fields.Integer(attribute="saves_per_90"),
-        "selected_by_percent": fields.Fixed(
-            decimal=1, attribute="selected_by_percent"
-        ),
+        "selected_by_percent": fields.Fixed(decimal=1, attribute="selected_by_percent"),
         "starts": fields.Integer(attribute="player_id"),
         "starts_per_90": fields.Fixed(decimal=2, attribute="starts_per_90"),
         "threat": fields.Integer(),
@@ -206,19 +187,11 @@ class BaseMarshal:
         "form": fields.Integer,
         "strength": fields.Integer,
         "teamDivision": fields.Integer(attribute="team_division"),
-        "strengthOverallHome": fields.Integer(
-            attribute="strength_overall_home"
-        ),
-        "strengthOverallAway": fields.Integer(
-            attribute="strength_overall_away"
-        ),
+        "strengthOverallHome": fields.Integer(attribute="strength_overall_home"),
+        "strengthOverallAway": fields.Integer(attribute="strength_overall_away"),
         "strengthAttackHome": fields.Integer(attribute="strength_attack_home"),
         "strengthAttackAway": fields.Integer(attribute="strength_attack_away"),
-        "strengthDefenceHome": fields.Integer(
-            attribute="strength_defence_home"
-        ),
-        "strengthDefenceAway": fields.Integer(
-            attribute="strength_defence_away"
-        ),
+        "strengthDefenceHome": fields.Integer(attribute="strength_defence_home"),
+        "strengthDefenceAway": fields.Integer(attribute="strength_defence_away"),
         "season": fields.Integer,
     }

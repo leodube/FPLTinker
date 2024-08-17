@@ -20,17 +20,7 @@ black = "^24.8.0"
 pylint = "^3.2.6"
 isort = "^5.13.2"
 flake8 = "^7.1.1"
-
-[tool.flake8]
-exclude = [
-    ".venv",
-]
-docstring-min-length=10
-max-line-length = 80
-count = true
-
-[tool.black]
-line-length = 80
+flake8-bugbear = "^24.4.26"
 
 [build-system]
 requires = ["poetry-core"]

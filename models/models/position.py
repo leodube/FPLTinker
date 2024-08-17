@@ -6,11 +6,11 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db
 
 
-class Position(Base):
+class Position(Base, WithTimestamps):
     """A class representing a player's position in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -32,6 +32,11 @@ class Position(Base):
     season: Mapped[Optional[int]]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship(
-        back_populates="position"
-    )  # noqa: F821
+    players: Mapped[List["Player"]] = db.relationship(back_populates="position")
+
+    # Methods
+    @classmethod
+    def index_constraints(cls) -> list:
+        """Return the constraints that the upsert will use to identify
+        conflicts"""
+        return ["fpl_id", "sesason"]

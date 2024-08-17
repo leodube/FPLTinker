@@ -7,8 +7,8 @@ from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Teams", description="FPL Teams")
 
-base_model = api.model("BaseModel", BaseMarshal.team)
-detailed_model = base_model.clone("DetailedModel", DetailedMarshal.team)
+base_model = api.model("TeamBaseModel", BaseMarshal.team)
+detailed_model = base_model.clone("TeamDetailedModel", DetailedMarshal.team)
 
 
 @api.route("/")

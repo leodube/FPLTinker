@@ -38,7 +38,9 @@ async def update(app: Flask, fpl: FPL):
     try:
         updated = Configuration.bulk_upsert(configurations)
         app.logger.debug(
-            f"Successfully updated {len(updated)} out of {Configuration.count()} total entries."
+            f"Successfully updated {len(updated)} out of "
+            f"{Configuration.count()} total entries."
         )
     except SQLAlchemyError as err:
+        Configuration.rollback()
         app.logger.error(f"Failed to update configurations. See error: {err}")

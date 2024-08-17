@@ -7,8 +7,8 @@ from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Positions", description="FPL Player Positions")
 
-base_model = api.model("BaseModel", BaseMarshal.position)
-detailed_model = base_model.clone("DetailedModel", DetailedMarshal.position)
+base_model = api.model("PositionBaseModel", BaseMarshal.position)
+detailed_model = base_model.clone("PositionDetailedModel", DetailedMarshal.position)
 
 
 @api.route("/")
@@ -30,7 +30,5 @@ class PositionResource(Resource):
     @api.marshal_with(detailed_model)
     def get(self, fpl_id):
         """Get a position by it's Fpl identifier."""
-        position = Position.find(
-            fpl_id=fpl_id, season=Configuration.get("season")
-        )
+        position = Position.find(fpl_id=fpl_id, season=Configuration.get("season"))
         return position

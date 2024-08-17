@@ -265,12 +265,8 @@ def upgrade():
         sa.Column("penalties_order", sa.Integer(), nullable=True),
         sa.Column("chance_of_playing_next_round", sa.Integer(), nullable=True),
         sa.Column("chance_of_playing_this_round", sa.Integer(), nullable=True),
-        sa.Column(
-            "corners_and_indirect_freekicks_order", sa.Integer(), nullable=True
-        ),
-        sa.Column(
-            "corners_and_indirect_freekicks_text", sa.String(), nullable=True
-        ),
+        sa.Column("corners_and_indirect_freekicks_order", sa.Integer(), nullable=True),
+        sa.Column("corners_and_indirect_freekicks_text", sa.String(), nullable=True),
         sa.Column("direct_freekicks_order", sa.Integer(), nullable=True),
         sa.Column("direct_freekicks_text", sa.String(), nullable=True),
         sa.Column("season", sa.Integer(), nullable=False),
@@ -316,15 +312,11 @@ def upgrade():
         sa.Column("expected_assists", sa.String(), nullable=False),
         sa.Column("expected_assists_per_90", sa.Integer(), nullable=False),
         sa.Column("expected_goal_involvements", sa.String(), nullable=False),
-        sa.Column(
-            "expected_goal_involvements_per_90", sa.Integer(), nullable=False
-        ),
+        sa.Column("expected_goal_involvements_per_90", sa.Integer(), nullable=False),
         sa.Column("expected_goals", sa.String(), nullable=False),
         sa.Column("expected_goals_per_90", sa.Integer(), nullable=False),
         sa.Column("expected_goals_conceded", sa.String(), nullable=False),
-        sa.Column(
-            "expected_goals_conceded_per_90", sa.Integer(), nullable=False
-        ),
+        sa.Column("expected_goals_conceded_per_90", sa.Integer(), nullable=False),
         sa.Column("form", sa.String(), nullable=False),
         sa.Column("goals_conceded", sa.Integer(), nullable=False),
         sa.Column("goals_conceded_per_90", sa.Integer(), nullable=False),

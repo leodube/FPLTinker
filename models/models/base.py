@@ -1,6 +1,7 @@
 """Base model"""
 
 from datetime import datetime
+
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column
@@ -8,16 +9,29 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .db import db, intpk, timestamp
 
 
+class WithTimestamps(db.Model):  # pylint: disable=too-few-public-methods
+    """Adds timestamps to any subclass that inherits it."""
+
+    __abstract__ = True
+
+    # Timestamp properties
+    created_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
+    updated_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
+
+    @classmethod
+    def last_updated(cls) -> datetime:
+        """Get the datestamp of the most recently updated entry."""
+        stmt = select(cls.updated_at).order_by(cls.updated_at.desc())
+        return db.session.scalar(stmt)
+
+
 class Base(db.Model):
-    """The base model adds general properties and methods that all subclasses
-    will use"""
+    """The base model adds general properties and methods."""
 
     __abstract__ = True
 
     # Base properties
     id: Mapped[intpk] = mapped_column(init=False, sort_order=-2)
-    created_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
-    updated_at: Mapped[timestamp] = mapped_column(init=False, sort_order=99)
 
     def save(self):
         """Save the object to the database."""
@@ -53,24 +67,23 @@ class Base(db.Model):
         return db.session.scalars(stmt)
 
     @classmethod
-    def last_updated(cls) -> datetime:
-        """Get the datestamp of the most recently updated entry."""
-        stmt = select(cls.updated_at).order_by(cls.updated_at.desc())
-        return db.session.scalar(stmt)
-
-    @classmethod
     def index_constraints(cls) -> list:
         """Return the constraints that the upsert will use to identify
         conflicts"""
         return ["id"]
 
     @classmethod
+    def rollback(cls):
+        """Rollback any pending changes."""
+        db.session.rollback()
+
+    @classmethod
     def on_conflict_set(cls, vals: dict) -> dict:
         """Determines what values to update during the upsert operation.
         Generally we want to keep the id and created_at date from the
         original insert."""
-        del vals["id"]
-        del vals["created_at"]
+        vals.pop("id", None)
+        vals.pop("created_at", None)
         return vals
 
     @classmethod

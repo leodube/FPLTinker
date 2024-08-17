@@ -11,12 +11,14 @@ from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, mapped_column
 from sqlalchemy_continuum import make_versioned
 from typing_extensions import Annotated
 
-intpk = Annotated[  # pylint: disable=invalid-name
-    int, mapped_column(primary_key=True)
-]
+intpk = Annotated[int, mapped_column(primary_key=True)]  # pylint: disable=invalid-name
 timestamp = Annotated[  # pylint: disable=invalid-name
     datetime,
     mapped_column(nullable=False, server_default=func.CURRENT_TIMESTAMP()),
+]
+optional_timestamp = Annotated[  # pylint: disable=invalid-name
+    datetime,
+    mapped_column(nullable=True, server_default=func.CURRENT_TIMESTAMP()),
 ]
 
 

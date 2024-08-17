@@ -7,8 +7,8 @@ from .marshalling import BaseMarshal, DetailedMarshal
 
 api = Namespace("Gameweeks", description="FPL Gameweeks")
 
-base_model = api.model("BaseModel", BaseMarshal.gameweek)
-detailed_model = base_model.clone("DetailedModel", DetailedMarshal.gameweek)
+base_model = api.model("GameweekBaseModel", BaseMarshal.gameweek)
+detailed_model = base_model.clone("GameweekDetailedModel", DetailedMarshal.gameweek)
 
 
 @api.route("/")
@@ -31,9 +31,7 @@ class GameweekResource(Resource):
     def get(self, fpl_id: int = None):
         """Get a gameweek by it's Fpl identifier."""
         if fpl_id:
-            gameweek = Gameweek.find(
-                fpl_id=fpl_id, season=Configuration.get("season")
-            )
+            gameweek = Gameweek.find(fpl_id=fpl_id, season=Configuration.get("season"))
             return gameweek
 
         gameweek = Gameweek.find(is_current=True)

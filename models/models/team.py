@@ -6,11 +6,11 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db
 
 
-class Team(Base):
+class Team(Base, WithTimestamps):
     """A class representing a team in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -39,9 +39,7 @@ class Team(Base):
     strength_defence_away: Mapped[int]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship(
-        back_populates="team"
-    )  # noqa: F821
+    players: Mapped[List["Player"]] = db.relationship(back_populates="team")
 
     # Additional properties
     season: Mapped[Optional[int]]

@@ -5,11 +5,11 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .db import db
 
 
-class PlayerStats(Base):
+class PlayerStats(Base, WithTimestamps):
     """A class representing a player's stats in Fantasy Premier League."""
 
     __versioned__ = {}
@@ -69,14 +69,10 @@ class PlayerStats(Base):
     season: Mapped[Optional[int]]
 
     # Foreign keys
-    player_id: Mapped[int] = mapped_column(
-        db.ForeignKey("players.id"), sort_order=-1
-    )
+    player_id: Mapped[int] = mapped_column(db.ForeignKey("players.id"), sort_order=-1)
 
     # Relationships
-    player: Mapped["Player"] = db.relationship(
-        back_populates="stats", viewonly=True
-    )  # noqa: F821
+    player: Mapped["Player"] = db.relationship(back_populates="stats", viewonly=True)
 
     # Methods
     @classmethod

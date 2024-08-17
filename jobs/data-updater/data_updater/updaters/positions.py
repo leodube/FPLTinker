@@ -17,24 +17,29 @@ async def update(app: Flask, fpl: FPL):
         app.logger.debug("Already updated positions today. Skipping.")
         return
 
-    fpl_positions = await fpl.get_positions(return_json=True)
+    api_positions = await fpl.get_positions(return_json=True)
+    season = Configuration.get("season")
 
     # Update positions
     positions = []
-    for fp in fpl_positions:
-        fp["fpl_id"] = fp["id"]
-        fp["season"] = Configuration.get("season")
-        position = {
-            key: fp[key] for key in Position.__dict__.keys() if key in fp
-        }
+    for p in api_positions:
+        # Set base attributes
+        p["fpl_id"] = p["id"]
+        p["season"] = season
+
+        # Generate dict and add to list
+        keys = Position.__dict__.keys()
+        position = {key: p[key] for key in keys if key in p}
         positions.append(position)
 
     try:
         updated = Position.bulk_upsert(positions)
         app.logger.debug(
-            f"Successfully updated {len(updated)} out of {Position.count()} total entries."
+            f"Successfully updated {len(updated)} out of "
+            f"{Position.count()} total entries."
         )
     except SQLAlchemyError as err:
+        Position.rollback()
         app.logger.error(f"Failed to update positions. See error: {err}")
 
 

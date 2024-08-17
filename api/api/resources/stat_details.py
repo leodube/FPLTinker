@@ -3,11 +3,11 @@
 from flask_restx import Namespace, Resource
 from models import StatDetails
 
-from .marshalling import BaseMarshal, DetailedMarshal
+from .marshalling import BaseMarshal
 
 api = Namespace("StatDetails", description="Statistic Details")
 
-base_model = api.model("BaseModel", BaseMarshal.stat_details)
+base_model = api.model("StatDetailsBaseModel", BaseMarshal.stat_details)
 
 
 @api.route("/")

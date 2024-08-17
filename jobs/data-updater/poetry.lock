@@ -515,6 +515,24 @@ pycodestyle = ">=2.12.0,<2.13.0"
 pyflakes = ">=3.2.0,<3.3.0"
 
 [[package]]
+name = "flake8-bugbear"
+version = "24.4.26"
+description = "A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle."
+optional = false
+python-versions = ">=3.8.1"
+files = [
+    {file = "flake8_bugbear-24.4.26-py3-none-any.whl", hash = "sha256:cb430dd86bc821d79ccc0b030789a9c87a47a369667f12ba06e80f11305e8258"},
+    {file = "flake8_bugbear-24.4.26.tar.gz", hash = "sha256:ff8d4ba5719019ebf98e754624c30c05cef0dadcf18a65d91c7567300e52a130"},
+]
+
+[package.dependencies]
+attrs = ">=19.2.0"
+flake8 = ">=6.0.0"
+
+[package.extras]
+dev = ["coverage", "hypothesis", "hypothesmith (>=0.2)", "pre-commit", "pytest", "tox"]
+
+[[package]]
 name = "flask"
 version = "3.0.3"
 description = "A simple framework for building complex web applications."
@@ -535,6 +553,22 @@ Werkzeug = ">=3.0.0"
 [package.extras]
 async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
+
+[[package]]
+name = "flask-migrate"
+version = "4.0.7"
+description = "SQLAlchemy database migrations for Flask applications using Alembic."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "Flask-Migrate-4.0.7.tar.gz", hash = "sha256:dff7dd25113c210b069af280ea713b883f3840c1e3455274745d7355778c8622"},
+    {file = "Flask_Migrate-4.0.7-py3-none-any.whl", hash = "sha256:5c532be17e7b43a223b7500d620edae33795df27c75811ddf32560f7d48ec617"},
+]
+
+[package.dependencies]
+alembic = ">=1.9.0"
+Flask = ">=0.9"
+Flask-SQLAlchemy = ">=1.0"
 
 [[package]]
 name = "flask-sqlalchemy"
@@ -911,7 +945,9 @@ develop = false
 [package.dependencies]
 alembic = "^1.13.2"
 flask = "^3.0.3"
+flask-migrate = "^4.0.7"
 flask-sqlalchemy = "^3.1.1"
+psycopg2 = "^2.9.9"
 sqlalchemy = "^2.0.32"
 sqlalchemy-continuum = "^1.4.2"
 
@@ -1586,4 +1622,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "6390c7a42081dcd4033e169d438d555e18d250881f90f2bc3ad3b275ae7c8dab"
+content-hash = "52df19e6177f27443f0e8ae8514475b77982748d483b8f035ef39be692cf795f"
