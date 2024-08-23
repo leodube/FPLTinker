@@ -9,7 +9,6 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.0.3"
 flask-sqlalchemy = "^3.1.1"
-sqlalchemy-continuum = "^1.4.2"
 alembic = "^1.13.2"
 sqlalchemy = "^2.0.32"
 psycopg2 = "^2.9.9"
@@ -21,6 +20,11 @@ pylint = "^3.2.6"
 isort = "^5.13.2"
 flake8 = "^7.1.1"
 flake8-bugbear = "^24.4.26"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.2"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]

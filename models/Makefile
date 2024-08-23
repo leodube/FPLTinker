@@ -33,16 +33,18 @@ install:
 # COMMANDS -- CI                                                               #
 ################################################################################
 format:
-	. .venv/bin/activate && isort . && black .
+	. .venv/bin/activate && isort $(PROJECT_NAME) tests && black $(PROJECT_NAME) tests
 
 pylint:
-	. .venv/bin/activate && pylint $(PROJECT_NAME)
+	. .venv/bin/activate && pylint $(PROJECT_NAME) tests
 
 flake8:
-	. .venv/bin/activate && flake8 $(PROJECT_NAME)
+	. .venv/bin/activate && flake8 $(PROJECT_NAME) tests
 
 lint: pylint flake8
 
+test:
+	. .venv/bin/activate && pytest
 
 ################################################################################
 # COMMANDS -- Migrations                                                       #

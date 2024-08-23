@@ -8,7 +8,6 @@ from .base import Base
 class StatDetails(Base):
     """A class representing stat details."""
 
-    __versioned__ = {}
     __tablename__ = "stat_details"
 
     # Properties

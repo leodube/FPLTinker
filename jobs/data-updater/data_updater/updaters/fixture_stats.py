@@ -2,7 +2,7 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, Fixture, FixtureStats, Player, StatDetails
+from models import Configuration, Fixture, FixtureStat, Player, StatDetails
 
 from .utils.db_utilities import apply_update
 
@@ -55,4 +55,4 @@ async def update(app: Flask, fpl: FPL):
                     fixture_stats.append(home_stat)
 
     # Apply updates to db
-    apply_update(app, FixtureStats, fixture_stats)
+    apply_update(app, FixtureStat, fixture_stats)

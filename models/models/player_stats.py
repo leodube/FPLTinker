@@ -12,7 +12,6 @@ from .db import db
 class PlayerStats(Base, WithTimestamps):
     """A class representing a player's stats in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "player_stats"
     __table_args__ = (db.UniqueConstraint("player_id", "season"),)
 
@@ -72,7 +71,9 @@ class PlayerStats(Base, WithTimestamps):
     player_id: Mapped[int] = mapped_column(db.ForeignKey("players.id"), sort_order=-1)
 
     # Relationships
-    player: Mapped["Player"] = db.relationship(back_populates="stats", viewonly=True)
+    player: Mapped["Player"] = db.relationship(
+        back_populates="stats", viewonly=True, init=False
+    )
 
     # Methods
     @classmethod

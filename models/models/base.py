@@ -1,6 +1,7 @@
 """Base model"""
 
 from datetime import datetime
+from typing import TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert

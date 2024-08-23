@@ -5,7 +5,7 @@ from models import Configuration, Team
 
 from .marshalling import BaseMarshal, DetailedMarshal
 
-api = Namespace("Teams", description="FPL Teams")
+api = Namespace("teams", description="FPL Teams")
 
 base_model = api.model("TeamBaseModel", BaseMarshal.team)
 detailed_model = base_model.clone("TeamDetailedModel", DetailedMarshal.team)
@@ -15,7 +15,7 @@ detailed_model = base_model.clone("TeamDetailedModel", DetailedMarshal.team)
 class TeamListResource(Resource):
     """Team list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the teams."""
         teams = Team.all()
@@ -23,7 +23,6 @@ class TeamListResource(Resource):
 
 
 @api.route("/<fpl_id>")
-@api.param("fpl_id", "The FPL identifier")
 class TeamResource(Resource):
     """Team api resource."""
 

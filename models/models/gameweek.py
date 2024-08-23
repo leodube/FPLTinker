@@ -15,7 +15,6 @@ from .db import db, optional_timestamp, timestamp
 class Gameweek(Base, WithTimestamps):
     """A class representing a gameweek in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "gameweeks"
     __table_args__ = (db.UniqueConstraint("fpl_id", "season"),)
 
@@ -46,8 +45,10 @@ class Gameweek(Base, WithTimestamps):
     season: Mapped[Optional[int]]
 
     # Relationships
-    fixtures: Mapped[List["Fixture"]] = db.relationship(back_populates="gameweek")
-    top_player: Mapped["Player"] = db.relationship(viewonly=True)
+    fixtures: Mapped[List["Fixture"]] = db.relationship(
+        back_populates="gameweek", init=False
+    )
+    top_player: Mapped["Player"] = db.relationship(viewonly=True, init=False)
 
     # Methods
     @classmethod

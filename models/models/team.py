@@ -13,11 +13,10 @@ from .db import db
 class Team(Base, WithTimestamps):
     """A class representing a team in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "teams"
 
     # FPL api properties
-    fpl_id: Mapped[int] = mapped_column(unique=True, sort_order=-1)
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     code: Mapped[int] = mapped_column(unique=True, sort_order=-1)
     name: Mapped[str]
     short_name: Mapped[str]
@@ -39,7 +38,7 @@ class Team(Base, WithTimestamps):
     strength_defence_away: Mapped[int]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship(back_populates="team")
+    players: Mapped[List["Player"]] = db.relationship(back_populates="team", init=False)
 
     # Additional properties
     season: Mapped[Optional[int]]

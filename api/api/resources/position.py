@@ -5,7 +5,7 @@ from models import Configuration, Position
 
 from .marshalling import BaseMarshal, DetailedMarshal
 
-api = Namespace("Positions", description="FPL Player Positions")
+api = Namespace("positions", description="FPL Player Positions")
 
 base_model = api.model("PositionBaseModel", BaseMarshal.position)
 detailed_model = base_model.clone("PositionDetailedModel", DetailedMarshal.position)
@@ -15,7 +15,7 @@ detailed_model = base_model.clone("PositionDetailedModel", DetailedMarshal.posit
 class PositionListResource(Resource):
     """Position list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the positions."""
         positions = Position.all()
@@ -23,7 +23,6 @@ class PositionListResource(Resource):
 
 
 @api.route("/<fpl_id>")
-@api.param("fpl_id", "The FPL identifier")
 class PositionResource(Resource):
     """Position api resource."""
 

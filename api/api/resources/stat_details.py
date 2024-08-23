@@ -5,7 +5,7 @@ from models import StatDetails
 
 from .marshalling import BaseMarshal
 
-api = Namespace("StatDetails", description="Statistic Details")
+api = Namespace("stats", description="Statistic Details")
 
 base_model = api.model("StatDetailsBaseModel", BaseMarshal.stat_details)
 
@@ -14,7 +14,7 @@ base_model = api.model("StatDetailsBaseModel", BaseMarshal.stat_details)
 class StatDetailsListResource(Resource):
     """Stat details list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the stat details."""
         stat_details = StatDetails.all()
@@ -22,7 +22,6 @@ class StatDetailsListResource(Resource):
 
 
 @api.route("/<name>")
-@api.param("name", "The statistic name")
 class StatDetailsResource(Resource):
     """Stat details api resource."""
 

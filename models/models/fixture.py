@@ -13,7 +13,6 @@ from .db import db, timestamp
 class Fixture(Base, WithTimestamps):
     """A class representing a fixture in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "fixtures"
 
     # FPL api properties
@@ -42,9 +41,9 @@ class Fixture(Base, WithTimestamps):
 
     # Relationships
     gameweek: Mapped["Gameweek"] = db.relationship(
-        back_populates="fixtures", viewonly=True
+        back_populates="fixtures", viewonly=True, init=False
     )
-    stats: Mapped[List["FixtureStats"]] = db.relationship()
+    stats: Mapped[List["FixtureStat"]] = db.relationship(init=False)
 
     # Methods
     @classmethod

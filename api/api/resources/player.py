@@ -5,7 +5,7 @@ from models import Configuration, Player
 
 from .marshalling import BaseMarshal, DetailedMarshal
 
-api = Namespace("Players", description="FPL Players")
+api = Namespace("players", description="FPL Players")
 
 base_model = api.model("PlayerBaseModel", BaseMarshal.player)
 detailed_model = base_model.clone("PlayerDetailedModel", DetailedMarshal.player)
@@ -15,7 +15,7 @@ detailed_model = base_model.clone("PlayerDetailedModel", DetailedMarshal.player)
 class PlayerListResource(Resource):
     """Player list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the fixtures."""
         players = Player.all()
@@ -23,7 +23,6 @@ class PlayerListResource(Resource):
 
 
 @api.route("/<fpl_id>")
-@api.param("fpl_id", "The FPL identifier")
 class PlayerResource(Resource):
     """Player api resource."""
 

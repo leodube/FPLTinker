@@ -1,4 +1,4 @@
-"""FixtureStats model"""
+"""FixtureStat model"""
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -6,10 +6,9 @@ from .base import Base
 from .db import db
 
 
-class FixtureStats(Base):
-    """A class representing a fixtures's stats in Fantasy Premier League."""
+class FixtureStat(Base):
+    """A class representing a fixtures stat in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "fixture_stats"
     __table_args__ = (
         db.UniqueConstraint("fixture_id", "team_id", "stat_details_id", "player_id"),

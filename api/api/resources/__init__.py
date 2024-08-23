@@ -24,9 +24,9 @@ api = Api(
     description="The api for the FPL Tinker app",
 )
 
-api.add_namespace(fixture_api, path="/fixtures")
-api.add_namespace(gameweek_api, path="/gameweeks")
-api.add_namespace(player_api, path="/players")
-api.add_namespace(position_api, path="/positions")
-api.add_namespace(stat_details_api, path="/stats")
-api.add_namespace(team_api, path="/teams")
+api.add_namespace(fixture_api)
+api.add_namespace(gameweek_api)
+api.add_namespace(player_api)
+api.add_namespace(position_api)
+api.add_namespace(stat_details_api)
+api.add_namespace(team_api)

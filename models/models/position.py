@@ -13,12 +13,11 @@ from .db import db
 class Position(Base, WithTimestamps):
     """A class representing a player's position in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "positions"
     __table_args__ = (db.UniqueConstraint("fpl_id", "season"),)
 
     # FPL api properties
-    fpl_id: Mapped[int] = mapped_column(sort_order=-1, primary_key=True)
+    fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     plural_name: Mapped[str]
     plural_name_short: Mapped[str]
     singular_name: Mapped[str]
@@ -30,10 +29,12 @@ class Position(Base, WithTimestamps):
     element_count: Mapped[int]
 
     # Additional properties
-    season: Mapped[Optional[int]] = mapped_column(primary_key=True)
+    season: Mapped[Optional[int]]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship(back_populates="position")
+    players: Mapped[List["Player"]] = db.relationship(
+        back_populates="position", init=False
+    )
 
     # Methods
     @classmethod

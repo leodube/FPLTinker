@@ -5,7 +5,7 @@ from models import Configuration, Fixture
 
 from .marshalling import BaseMarshal, DetailedMarshal
 
-api = Namespace("Fixtures", description="FPL Fixtures")
+api = Namespace("fixtures", description="FPL Fixtures")
 
 base_model = api.model("FixtureBaseModel", BaseMarshal.fixture)
 detailed_model = base_model.clone("FixtureDetailedModel", DetailedMarshal.fixture)
@@ -15,7 +15,7 @@ detailed_model = base_model.clone("FixtureDetailedModel", DetailedMarshal.fixtur
 class FixtureListResource(Resource):
     """Fixture list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the fixtures."""
         fixtures = Fixture.all()
@@ -23,7 +23,6 @@ class FixtureListResource(Resource):
 
 
 @api.route("/<fpl_id>")
-@api.param("fpl_id", "The FPL identifier")
 class FixtureResource(Resource):
     """Fixture api resource."""
 

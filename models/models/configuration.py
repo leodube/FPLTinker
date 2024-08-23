@@ -14,7 +14,6 @@ from .db import db
 class Configuration(Base, WithTimestamps):
     """A class representing a configuration for the application."""
 
-    __versioned__ = {}
     __tablename__ = "configurations"
 
     class ConfigurationTypes(Enum):
@@ -37,7 +36,7 @@ class Configuration(Base, WithTimestamps):
         return ["name"]
 
     @classmethod
-    def get(cls, name: str) -> any:
+    def get(cls, name: str) -> any | None:
         """Return the value in the correct type for the configuration matching
         the name."""
         if not (config := cls.find_by_name(name)):
@@ -47,7 +46,7 @@ class Configuration(Base, WithTimestamps):
         )
 
     @classmethod
-    def find_by_name(cls, name: str) -> Configuration:
+    def find_by_name(cls, name: str) -> Configuration | None:
         """Return the configuration matching the name"""
         return (
             db.session.query(Configuration)
@@ -58,17 +57,20 @@ class Configuration(Base, WithTimestamps):
     @classmethod
     def cast_value(cls, value: str, _type: ConfigurationTypes) -> any:
         """Cast the value to the correct type."""
-        match _type:
-            case cls.ConfigurationTypes.BOOLEAN:
-                return bool(value)
-            case cls.ConfigurationTypes.INTEGER:
-                return int(value)
-            case cls.ConfigurationTypes.STRING:
-                return value
-            case _:
-                raise ValueError(
-                    (
-                        f"Cannot cast type {_type}. Make sure the type exists "
-                        "in the ConfigurationTypes enum."
-                    )
+        try:
+            match _type:
+                case cls.ConfigurationTypes.BOOLEAN:
+                    return bool(value)
+                case cls.ConfigurationTypes.INTEGER:
+                    return int(value)
+                case cls.ConfigurationTypes.STRING:
+                    return value
+                case _:
+                    raise ValueError()
+        except:
+            raise ValueError(
+                (
+                    f"Cannot cast type {_type}. Make sure the type exists "
+                    "in the ConfigurationTypes enum."
                 )
+            )

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -13,8 +14,17 @@ from .db import db
 class Player(Base, WithTimestamps):
     """A class representing a player in Fantasy Premier League."""
 
-    __versioned__ = {}
     __tablename__ = "players"
+
+    class PlayerStatuses(Enum):
+        """Enum of the player statuses."""
+
+        AVAILABLE = "a"
+        DOUBTFUL = "d"
+        INJURED = "i"
+        NOT_ELIGIBLE = "n"
+        SUSPENDED = "s"
+        UNAVAILABLE = "u"
 
     # FPL api properties
     fpl_id: Mapped[int] = mapped_column(sort_order=-1)
@@ -45,11 +55,15 @@ class Player(Base, WithTimestamps):
     )
 
     # Relationships
-    stats: Mapped[List["PlayerStats"]] = db.relationship(back_populates="player")
-    position: Mapped["Position"] = db.relationship(
-        back_populates="players", viewonly=True
+    stats: Mapped[List["PlayerStats"]] = db.relationship(
+        back_populates="player", init=False
     )
-    team: Mapped["Team"] = db.relationship(back_populates="players", viewonly=True)
+    position: Mapped["Position"] = db.relationship(
+        back_populates="players", viewonly=True, init=False
+    )
+    team: Mapped["Team"] = db.relationship(
+        back_populates="players", viewonly=True, init=False
+    )
 
     # Methods
     @classmethod

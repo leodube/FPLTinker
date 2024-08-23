@@ -1,0 +1,121 @@
+"""Test suite to ensure the player stats model is working as expected."""
+
+from copy import deepcopy
+
+import pytest
+
+from models.models import Player, PlayerStats
+from ..models.utils import date_utilities
+from tests import (
+    factory_player,
+    factory_player_stats,
+    player_stats_data,
+    factory_position,
+    factory_team,
+)
+
+
+@pytest.mark.usefixtures("session")
+class TestPlayerStats:
+    @pytest.fixture
+    def data(self) -> dict:
+        return deepcopy(player_stats_data)
+
+    @pytest.fixture
+    def player(self) -> Player:
+        position = factory_position()
+        team = factory_team()
+        return factory_player(position_id=position.id, team_id=team.id)
+
+    def test_save(self, player: Player):
+        """Assert the player stats can be saved."""
+        player_stats = factory_player_stats(player_id=player.id)
+        assert player_stats.id
+
+    def test_delete(self, player: Player):
+        """Assert the player stats can be deleted."""
+        player_stats = factory_player_stats(player_id=player.id)
+        assert player_stats.id
+        player_stats.delete()
+        assert PlayerStats.count() == 0
+
+    def test_all(self, player: Player):
+        """Assert all entries can be found for the player stats."""
+        for i in range(num_player_stats := 5):
+            factory_player_stats(
+                player_id=player.id, season=date_utilities.add_to_season(20242025, -i)
+            )
+        assert len(PlayerStats.all()) == num_player_stats
+
+    def test_count(self, player: Player):
+        """Assert a count of all player stats entries can be found."""
+        for i in range(num_player_stats := 5):
+            factory_player_stats(
+                player_id=player.id, season=date_utilities.add_to_season(20242025, -i)
+            )
+        assert PlayerStats.count() == num_player_stats
+
+    def test_find(self, data, player: Player):
+        """Assert a matching player stats object can be found."""
+        data.update({"player_id": player.id})
+        player_stats = factory_player_stats(**data)
+        assert player_stats == PlayerStats.find(**data)
+
+    def test_find_all(self, data, player: Player):
+        """Assert all matching player stats object can be found."""
+        for i in range(num_player_stats := 5):
+            data.update(
+                {
+                    "player_id": player.id,
+                    "season": date_utilities.add_to_season(20242025, -i),
+                }
+            )
+            factory_player_stats(**data)
+        del data["player_id"]
+        del data["season"]
+        results = PlayerStats.find_all(**data)
+        assert results and len(results.all()) == num_player_stats
+
+    def test_index_constraints(self, db, metadata):
+        """Assert the index constraints are unique."""
+        table = metadata.tables["player_stats"]
+        table_constraint = next(
+            (
+                constraint
+                for constraint in table.constraints
+                if isinstance(constraint, db.UniqueConstraint)
+            ),
+            None,
+        )
+        assert table_constraint
+        for index_constraint in PlayerStats.index_constraints():
+            assert table_constraint.contains_column(table.c[index_constraint])
+
+    def test_bulk_upsert(self, data, player: Player):
+        """Assert entries can be inserted and updated."""
+        # Test inserting entries
+        player_stats = []
+        for i in range(num_player_stats_inserted := 5):
+            data.update(
+                {
+                    "player_id": player.id,
+                    "season": date_utilities.add_to_season(20242025, -i),
+                }
+            )
+            player_stats.append(deepcopy(data))
+        PlayerStats.bulk_upsert(player_stats)
+        assert PlayerStats.count() == num_player_stats_inserted
+
+        # Test updating entries
+        player_stats = []
+        for i in range(3):
+            data.update(
+                {
+                    "player_id": player.id,
+                    "season": date_utilities.add_to_season(20242025, -i),
+                    "total_points": 1,
+                }
+            )
+            player_stats.append(deepcopy(data))
+        PlayerStats.bulk_upsert(player_stats)
+        assert PlayerStats.count() == num_player_stats_inserted

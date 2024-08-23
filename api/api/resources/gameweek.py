@@ -5,7 +5,7 @@ from models import Configuration, Gameweek
 
 from .marshalling import BaseMarshal, DetailedMarshal
 
-api = Namespace("Gameweeks", description="FPL Gameweeks")
+api = Namespace("gameweeks", description="FPL Gameweeks")
 
 base_model = api.model("GameweekBaseModel", BaseMarshal.gameweek)
 detailed_model = base_model.clone("GameweekDetailedModel", DetailedMarshal.gameweek)
@@ -15,7 +15,7 @@ detailed_model = base_model.clone("GameweekDetailedModel", DetailedMarshal.gamew
 class GameweekListResource(Resource):
     """Gameweek list api resource."""
 
-    @api.marshal_with(base_model)
+    @api.marshal_list_with(base_model)
     def get(self):
         """Get a list of all the gameweeks."""
         gameweeks = Gameweek.all()
@@ -23,7 +23,6 @@ class GameweekListResource(Resource):
 
 
 @api.route("/<fpl_id>", "/current")
-@api.param("fpl_id", "The FPL identifier")
 class GameweekResource(Resource):
     """Gameweek api resource."""
 

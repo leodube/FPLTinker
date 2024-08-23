@@ -1,10 +1,10 @@
 """Exports all of the models and schemas used by the application."""
 
-from .base import Base
+from .base import Base, WithTimestamps
 from .configuration import Configuration
-from .db import db
+from .db import SQLAlchemyBase, db
 from .fixture import Fixture
-from .fixture_stats import FixtureStats
+from .fixture_stat import FixtureStat
 from .gameweek import Gameweek
 from .player import Player
 from .player_stats import PlayerStats
@@ -18,14 +18,16 @@ __all__ = (
     "Base",
     "Configuration",
     "db",
-    "FixtureStats",
+    "FixtureStat",
     "Fixture",
     "Gameweek",
     "PlayerStats",
     "Player",
     "Position",
+    "SQLAlchemyBase",
     "StatDetails",
     "Team",
     "Tinker",
     "Weighting",
+    "WithTimestamps",
 )
