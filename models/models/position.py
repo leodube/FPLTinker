@@ -39,6 +39,6 @@ class Position(Base, WithTimestamps):
     # Methods
     @classmethod
     def index_constraints(cls) -> list:
-        """Return the constraints that the upsert will use to identify
+        """Returns the constraints that the upsert will use to identify
         conflicts"""
         return ["fpl_id", "season"]

@@ -4,27 +4,27 @@ import pytest
 from flask_migrate import Migrate, downgrade, upgrade
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from ..manage import create_app
-from ..models import SQLAlchemyBase
-from ..models import db as _db
+from ..update import create_app
+from models import SQLAlchemyBase
+from models import db as _db
 
 
 @pytest.fixture(scope="session")
-def app():  # pylint: disable=redefined-outer-name
+def app():  # pylint: disable=redefined-outer-name, invalid-name
     """Returns a session-wide application configured in TEST mode."""
     _app = create_app("testing")
     yield _app
 
 
 @pytest.fixture(scope="session")
-def metadata():  # pylint: disable=redefined-outer-name
+def metadata(app):  # pylint: disable=redefined-outer-name, invalid-name
     """Returns a session-wide metadata object for the db tables."""
     _metadata = SQLAlchemyBase.metadata
     yield _metadata
 
 
 @pytest.fixture(scope="session")
-def db(app, metadata):  # pylint: disable=redefined-outer-name
+def db(app, metadata):  # pylint: disable=redefined-outer-name, invalid-name
     """Returns a session-wide initialised database."""
     with app.app_context():
         # Recreate database
@@ -36,7 +36,7 @@ def db(app, metadata):  # pylint: disable=redefined-outer-name
 
 
 @pytest.fixture(scope="function")
-def session(app, db):  # pylint: disable=redefined-outer-name
+def session(app, db):
     """Returns a function-scoped session."""
     with app.app_context():
         connection = db.engine.connect()

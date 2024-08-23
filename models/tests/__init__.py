@@ -3,7 +3,6 @@
 from copy import deepcopy
 
 from models.models import (
-    Base,
     Configuration,
     Fixture,
     FixtureStat,
@@ -13,8 +12,6 @@ from models.models import (
     Position,
     StatDetails,
     Team,
-    Tinker,
-    Weighting,
 )
 
 configuration_data = {

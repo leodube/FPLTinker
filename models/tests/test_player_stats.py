@@ -5,24 +5,29 @@ from copy import deepcopy
 import pytest
 
 from models.models import Player, PlayerStats
-from ..models.utils import date_utilities
 from tests import (
     factory_player,
     factory_player_stats,
-    player_stats_data,
     factory_position,
     factory_team,
+    player_stats_data,
 )
+
+from ..models.utils import date_utilities
 
 
 @pytest.mark.usefixtures("session")
 class TestPlayerStats:
+    """The class pytest grouping for the player stats model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the player stats data object."""
         return deepcopy(player_stats_data)
 
     @pytest.fixture
     def player(self) -> Player:
+        """Returns a class-wide player instance."""
         position = factory_position()
         team = factory_team()
         return factory_player(position_id=position.id, team_id=team.id)

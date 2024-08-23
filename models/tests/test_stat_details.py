@@ -10,8 +10,11 @@ from tests import factory_stat_details, stat_details_data
 
 @pytest.mark.usefixtures("session")
 class TestStatDetails:
+    """The class pytest grouping for the stat details model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the stat details data object."""
         return deepcopy(stat_details_data)
 
     def test_save(self):

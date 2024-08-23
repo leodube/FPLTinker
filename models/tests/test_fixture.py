@@ -4,26 +4,32 @@ from copy import deepcopy
 
 import pytest
 
-from models.models import Fixture, Team, Gameweek
-from tests import factory_fixture, fixture_data, factory_team, factory_gameweek
+from models.models import Fixture, Gameweek, Team
+from tests import factory_fixture, factory_gameweek, factory_team, fixture_data
 
 
 @pytest.mark.usefixtures("session")
 class TestFixture:
+    """The class pytest grouping for the fixture model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the fixture data object."""
         return deepcopy(fixture_data)
 
     @pytest.fixture
     def gameweek(self) -> Gameweek:
+        """Returns a class-wide gameweek instance."""
         return factory_gameweek()
 
     @pytest.fixture
     def away_team(self) -> Team:
+        """Returns a class-wide away team instance."""
         return factory_team(code=1, name="Away Team")
 
     @pytest.fixture
     def home_team(self) -> Team:
+        """Returns a class-wide home team instance."""
         return factory_team(code=2, name="Home Team")
 
     def test_save(self, gameweek: Gameweek, away_team: Team, home_team: Team):

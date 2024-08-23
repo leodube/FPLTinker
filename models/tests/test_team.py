@@ -10,8 +10,11 @@ from tests import factory_team, team_data
 
 @pytest.mark.usefixtures("session")
 class TestTeam:
+    """The class pytest grouping for the team model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the team data object."""
         return deepcopy(team_data)
 
     def test_save(self):

@@ -10,16 +10,21 @@ from tests import factory_player, factory_position, factory_team, player_data
 
 @pytest.mark.usefixtures("session")
 class TestPlayer:
+    """The class pytest grouping for the player model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the player data object."""
         return deepcopy(player_data)
 
     @pytest.fixture
     def position(self) -> Position:
+        """Returns a class-wide position instance."""
         return factory_position()
 
     @pytest.fixture
     def team(self) -> Team:
+        """Returns a class-wide team instance."""
         return factory_team()
 
     def test_save(self, position: Position, team: Team):

@@ -10,8 +10,11 @@ from tests import factory_position, position_data
 
 @pytest.mark.usefixtures("session")
 class TestPosition:
+    """The class pytest grouping for the position model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the position data object."""
         return deepcopy(position_data)
 
     def test_save(self):

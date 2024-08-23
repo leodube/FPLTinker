@@ -10,8 +10,11 @@ from tests import configuration_data, factory_configuration
 
 @pytest.mark.usefixtures("session")
 class TestConfiguration:
+    """The class pytest grouping for the configuration model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the configuration data object."""
         return deepcopy(configuration_data)
 
     def test_save(self):

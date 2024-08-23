@@ -1,7 +1,6 @@
 """Base model"""
 
 from datetime import datetime
-from typing import TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
@@ -69,7 +68,7 @@ class Base(db.Model):
 
     @classmethod
     def index_constraints(cls) -> list:
-        """Return the constraints that the upsert will use to identify
+        """Returns the constraints that the upsert will use to identify
         conflicts"""
         return ["id"]
 

@@ -13,7 +13,7 @@ from data_updater.worker import run
 
 
 def create_app():
-    """Return a configured Flask App using the Factory method."""
+    """Returns a configured Flask App using the Factory method."""
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)

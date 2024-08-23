@@ -5,16 +5,16 @@ from copy import deepcopy
 import pytest
 
 from models.models import Gameweek
-from tests import (
-    factory_gameweek,
-    gameweek_data,
-)
+from tests import factory_gameweek, gameweek_data
 
 
 @pytest.mark.usefixtures("session")
 class TestGameweek:
+    """The class pytest grouping for the gameweek model."""
+
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the gameweek data object."""
         return deepcopy(gameweek_data)
 
     def test_save(self):

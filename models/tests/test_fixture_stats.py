@@ -4,46 +4,53 @@ from copy import deepcopy
 
 import pytest
 
-from models.models import FixtureStat, Fixture, Team, Player, StatDetails, Position
+from models.models import Fixture, FixtureStat, Player, Position, StatDetails, Team
 from tests import (
-    factory_fixture_stat,
-    fixture_stat_data,
     factory_fixture,
-    factory_team,
-    factory_stat_details,
-    factory_player,
+    factory_fixture_stat,
     factory_gameweek,
+    factory_player,
     factory_position,
+    factory_stat_details,
+    factory_team,
+    fixture_stat_data,
 )
 
 
 @pytest.mark.usefixtures("session")
 class TestFixtureStat:
+    """The class pytest grouping for the fixture stat model."""
 
     team_code_offset = 3  # used to prevent duplicate key on unique constraint
 
     @pytest.fixture
     def data(self) -> dict:
+        """Returns a class-wide copy of the fixture stat data object."""
         return deepcopy(fixture_stat_data)
 
     @pytest.fixture
     def team(self) -> Team:
+        """Returns a class-wide team instance."""
         return factory_team()
 
     @pytest.fixture
     def stat_details(self) -> StatDetails:
+        """Returns a class-wide stat details instance."""
         return factory_stat_details()
 
     @pytest.fixture
     def position(self) -> Position:
+        """Returns a class-wide position instance."""
         return factory_position()
 
     @pytest.fixture
     def player(self, team: Team, position: Position) -> Player:
+        """Returns a class-wide player instance."""
         return factory_player(team_id=team.id, position_id=position.id)
 
     @pytest.fixture
     def fixture(self, team: Team) -> Fixture:
+        """Returns a class-wide fixture instance."""
         away_team = factory_team(code=self.team_code_offset - 1)
         gameweek = factory_gameweek()
         return factory_fixture(
@@ -97,7 +104,6 @@ class TestFixtureStat:
         self,
         fixture: Fixture,
         player: Player,
-        position: Position,
         stat_details: StatDetails,
     ):
         """Assert a count of all fixture stats entries can be found."""
@@ -111,7 +117,7 @@ class TestFixtureStat:
             )
         assert FixtureStat.count() == num_fixture_stats
 
-    def test_find(
+    def test_find(  # pylint: disable=too-many-arguments
         self,
         data,
         fixture: Fixture,

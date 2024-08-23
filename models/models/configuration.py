@@ -31,13 +31,13 @@ class Configuration(Base, WithTimestamps):
     # Methods
     @classmethod
     def index_constraints(cls) -> list:
-        """Return the constraints that the upsert will use to identify
+        """Returns the constraints that the upsert will use to identify
         conflicts"""
         return ["name"]
 
     @classmethod
     def get(cls, name: str) -> any | None:
-        """Return the value in the correct type for the configuration matching
+        """Returns the value in the correct type for the configuration matching
         the name."""
         if not (config := cls.find_by_name(name)):
             return None
@@ -47,7 +47,7 @@ class Configuration(Base, WithTimestamps):
 
     @classmethod
     def find_by_name(cls, name: str) -> Configuration | None:
-        """Return the configuration matching the name"""
+        """Returns the configuration matching the name"""
         return (
             db.session.query(Configuration)
             .filter(Configuration.name == name)
@@ -67,10 +67,10 @@ class Configuration(Base, WithTimestamps):
                     return value
                 case _:
                     raise ValueError()
-        except:
+        except Exception as exc:
             raise ValueError(
                 (
                     f"Cannot cast type {_type}. Make sure the type exists "
                     "in the ConfigurationTypes enum."
                 )
-            )
+            ) from exc

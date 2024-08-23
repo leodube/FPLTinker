@@ -36,7 +36,7 @@ format:
 	. .venv/bin/activate && isort $(PROJECT_NAME) tests && black $(PROJECT_NAME) tests
 
 pylint:
-	. .venv/bin/activate && pylint $(PROJECT_NAME) tests
+	. .venv/bin/activate && pylint --rcfile=setup.cfg $(PROJECT_NAME) tests
 
 flake8:
 	. .venv/bin/activate && flake8 $(PROJECT_NAME) tests
