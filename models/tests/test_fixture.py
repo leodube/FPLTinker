@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Fixture, Gameweek, Team
 from tests import factory_fixture, factory_gameweek, factory_team, fixture_data
@@ -39,6 +40,18 @@ class TestFixture:
         )
         assert fixture.id
 
+    def test_save_with_conflict(
+        self, gameweek: Gameweek, away_team: Team, home_team: Team
+    ):
+        """Assert the fixture won't be saved if constraints violated."""
+        factory_fixture(
+            gameweek_id=gameweek.id, team_a_id=away_team.id, team_h_id=home_team.id
+        )
+        with pytest.raises(IntegrityError):
+            factory_fixture(
+                gameweek_id=gameweek.id, team_a_id=away_team.id, team_h_id=home_team.id
+            )
+
     def test_delete(self, gameweek: Gameweek, away_team: Team, home_team: Team):
         """Assert the fixture can be deleted."""
         fixture = factory_fixture(
@@ -69,6 +82,13 @@ class TestFixture:
                 team_h_id=home_team.id,
             )
         assert Fixture.count() == num_fixtures
+
+    def test_exists(self, gameweek: Gameweek, away_team: Team, home_team: Team):
+        """Assert a fixture entry exists."""
+        fixture = factory_fixture(
+            gameweek_id=gameweek.id, team_a_id=away_team.id, team_h_id=home_team.id
+        )
+        assert Fixture.exists(fixture)
 
     def test_find(self, data, gameweek: Gameweek, away_team: Team, home_team: Team):
         """Assert a matching fixture object can be found."""
@@ -112,31 +132,3 @@ class TestFixture:
         assert table_constraint
         for index_constraint in Fixture.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(
-        self, data, gameweek: Gameweek, away_team: Team, home_team: Team
-    ):
-        """Assert entries can be inserted and updated."""
-        data.update(
-            {
-                "gameweek_id": gameweek.id,
-                "team_a_id": away_team.id,
-                "team_h_id": home_team.id,
-            }
-        )
-
-        # Test inserting entries
-        fixtures = []
-        for i in range(num_fixtures_inserted := 5):
-            data.update({"code": i})
-            fixtures.append(deepcopy(data))
-        Fixture.bulk_upsert(fixtures)
-        assert Fixture.count() == num_fixtures_inserted
-
-        # Test updating entries
-        fixtures = []
-        for i in range(3):
-            data.update({"code": i, "team_a_score": i})
-            fixtures.append(deepcopy(data))
-        Fixture.bulk_upsert(fixtures)
-        assert Fixture.count() == num_fixtures_inserted

@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Fixture, FixtureStat, Player, Position, StatDetails, Team
 from tests import (
@@ -69,6 +70,24 @@ class TestFixtureStat:
         )
         assert fixture_stats.id
 
+    def test_save_with_conflict(
+        self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
+    ):
+        """Assert the fixture stats won't be saved if constraints violated."""
+        factory_fixture_stat(
+            fixture_id=fixture.id,
+            team_id=team.id,
+            player_id=player.id,
+            stat_details_id=stat_details.id,
+        )
+        with pytest.raises(IntegrityError):
+            factory_fixture_stat(
+                fixture_id=fixture.id,
+                team_id=team.id,
+                player_id=player.id,
+                stat_details_id=stat_details.id,
+            )
+
     def test_delete(
         self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
     ):
@@ -116,6 +135,18 @@ class TestFixtureStat:
                 value=i,
             )
         assert FixtureStat.count() == num_fixture_stats
+
+    def test_exists(
+        self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
+    ):
+        """Assert a fixture stats entry exists."""
+        fixture_stats = factory_fixture_stat(
+            fixture_id=fixture.id,
+            team_id=team.id,
+            player_id=player.id,
+            stat_details_id=stat_details.id,
+        )
+        assert FixtureStat.exists(fixture_stats)
 
     def test_find(  # pylint: disable=too-many-arguments
         self,
@@ -177,42 +208,3 @@ class TestFixtureStat:
         assert table_constraint
         for index_constraint in FixtureStat.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(
-        self,
-        data,
-        fixture: Fixture,
-        player: Player,
-        stat_details: StatDetails,
-    ):
-        """Assert entries can be inserted and updated."""
-        data.update(
-            {
-                "fixture_id": fixture.id,
-                "player_id": player.id,
-                "stat_details_id": stat_details.id,
-            }
-        )
-
-        # Test inserting entries
-        fixture_stats = []
-        for i in range(num_fixture_stats_inserted := 5):
-            data.update(
-                {"team_id": factory_team(code=i + self.team_code_offset).id, "value": i}
-            )
-            fixture_stats.append(deepcopy(data))
-        FixtureStat.bulk_upsert(fixture_stats)
-        assert FixtureStat.count() == num_fixture_stats_inserted
-
-        # Test updating entries
-        fixture_stats = []
-        for i in range(3):
-            data.update(
-                {
-                    "team_id": Team.find(code=i + self.team_code_offset).id,
-                    "value": i + 1,
-                }
-            )
-            fixture_stats.append(deepcopy(data))
-        FixtureStat.bulk_upsert(fixture_stats)
-        assert FixtureStat.count() == num_fixture_stats_inserted

@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Player, PlayerStats
 from tests import (
@@ -37,6 +38,12 @@ class TestPlayerStats:
         player_stats = factory_player_stats(player_id=player.id)
         assert player_stats.id
 
+    def test_save_with_conflict(self, player: Player):
+        """Assert the player stats won't be saved if constraints violated."""
+        factory_player_stats(player_id=player.id)
+        with pytest.raises(IntegrityError):
+            factory_player_stats(player_id=player.id)
+
     def test_delete(self, player: Player):
         """Assert the player stats can be deleted."""
         player_stats = factory_player_stats(player_id=player.id)
@@ -59,6 +66,11 @@ class TestPlayerStats:
                 player_id=player.id, season=date_utilities.add_to_season(20242025, -i)
             )
         assert PlayerStats.count() == num_player_stats
+
+    def test_exists(self, player: Player):
+        """Assert a player stats entry exists."""
+        player_stats = factory_player_stats(player_id=player.id)
+        assert PlayerStats.exists(player_stats)
 
     def test_find(self, data, player: Player):
         """Assert a matching player stats object can be found."""
@@ -95,32 +107,3 @@ class TestPlayerStats:
         assert table_constraint
         for index_constraint in PlayerStats.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data, player: Player):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        player_stats = []
-        for i in range(num_player_stats_inserted := 5):
-            data.update(
-                {
-                    "player_id": player.id,
-                    "season": date_utilities.add_to_season(20242025, -i),
-                }
-            )
-            player_stats.append(deepcopy(data))
-        PlayerStats.bulk_upsert(player_stats)
-        assert PlayerStats.count() == num_player_stats_inserted
-
-        # Test updating entries
-        player_stats = []
-        for i in range(3):
-            data.update(
-                {
-                    "player_id": player.id,
-                    "season": date_utilities.add_to_season(20242025, -i),
-                    "total_points": 1,
-                }
-            )
-            player_stats.append(deepcopy(data))
-        PlayerStats.bulk_upsert(player_stats)
-        assert PlayerStats.count() == num_player_stats_inserted

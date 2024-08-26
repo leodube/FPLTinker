@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "models"
 version = "0.1.0"
-description = ""
+description = "Contains the common data models for the FPL Tinker backend."
 authors = ["Leo Dube <leo.s.dube@gmail.com>"]
 readme = "README.md"
+packages = [{ include = "models" }, { include = "migrations" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -20,7 +21,6 @@ pylint = "^3.2.6"
 isort = "^5.13.2"
 flake8 = "^7.1.1"
 flake8-bugbear = "^24.4.26"
-
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.2"

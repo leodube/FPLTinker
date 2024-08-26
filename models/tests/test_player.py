@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Player, Position, Team
 from tests import factory_player, factory_position, factory_team, player_data
@@ -32,6 +33,12 @@ class TestPlayer:
         player = factory_player(position_id=position.id, team_id=team.id)
         assert player.id
 
+    def test_save_with_conflict(self, position: Position, team: Team):
+        """Assert the player won't be saved if constraints violated."""
+        factory_player(position_id=position.id, team_id=team.id)
+        with pytest.raises(IntegrityError):
+            factory_player(position_id=position.id, team_id=team.id)
+
     def test_delete(self, position: Position, team: Team):
         """Assert the player can be deleted."""
         player = factory_player(position_id=position.id, team_id=team.id)
@@ -60,6 +67,11 @@ class TestPlayer:
                 web_name=f"player {i}",
             )
         assert Player.count() == num_players
+
+    def test_exists(self, position: Position, team: Team):
+        """Assert a player entry exists."""
+        player = factory_player(position_id=position.id, team_id=team.id)
+        assert Player.exists(player)
 
     def test_find(self, data, position: Position, team: Team):
         """Assert a matching player object can be found."""
@@ -98,28 +110,3 @@ class TestPlayer:
         assert table_constraint
         for index_constraint in Player.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data, position: Position, team: Team):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        players = []
-        for i in range(num_players_inserted := 5):
-            data.update(
-                {
-                    "code": i,
-                    "position_id": position.id,
-                    "team_id": team.id,
-                    "web_name": f"player {i}",
-                }
-            )
-            players.append(deepcopy(data))
-        Player.bulk_upsert(players)
-        assert Player.count() == num_players_inserted
-
-        # Test updating entries
-        players = []
-        for i in range(3):
-            data.update({"code": i, "web_name": f"new name {i}"})
-            players.append(deepcopy(data))
-        Player.bulk_upsert(players)
-        assert Player.count() == num_players_inserted

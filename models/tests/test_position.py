@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Position
 from tests import factory_position, position_data
@@ -22,6 +23,12 @@ class TestPosition:
         position = factory_position()
         assert position.id
 
+    def test_save_with_conflict(self):
+        """Assert the position won't be saved if constraints violated."""
+        factory_position()
+        with pytest.raises(IntegrityError):
+            factory_position()
+
     def test_delete(self):
         """Assert the position can be deleted."""
         position = factory_position()
@@ -40,6 +47,11 @@ class TestPosition:
         for i in range(num_positions := 5):
             factory_position(fpl_id=i, singular_name=f"position {i}")
         assert Position.count() == num_positions
+
+    def test_exists(self):
+        """Assert a position entry exists."""
+        position = factory_position()
+        assert Position.exists(position)
 
     def test_find(self, data):
         """Assert a matching position object can be found."""
@@ -70,21 +82,3 @@ class TestPosition:
         assert table_constraint
         for index_constraint in Position.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        positions = []
-        for i in range(num_positions_inserted := 5):
-            data.update({"fpl_id": i, "singular_name": f"position {i}"})
-            positions.append(deepcopy(data))
-        Position.bulk_upsert(positions)
-        assert Position.count() == num_positions_inserted
-
-        # Test updating entries
-        positions = []
-        for i in range(3):
-            data.update({"fpl_id": i, "singular_name": f"new position {i}"})
-            positions.append(deepcopy(data))
-        Position.bulk_upsert(positions)
-        assert Position.count() == num_positions_inserted

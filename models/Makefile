@@ -57,13 +57,6 @@ create-db:
 	-T template0 \
 	$(DATABASE_NAME)
 
-drop-db:
-	dropdb \
-	-h $(DATABASE_HOST) \
-	-p $(DATABASE_PORT) \
-	-U $(DATABASE_USERNAME) \
-	$(DATABASE_NAME)
-
 db-init:
 	flask db init
 

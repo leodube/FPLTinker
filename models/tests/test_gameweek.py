@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Gameweek
 from tests import factory_gameweek, gameweek_data
@@ -22,6 +23,12 @@ class TestGameweek:
         gameweek = factory_gameweek()
         assert gameweek.id
 
+    def test_save_with_conflict(self):
+        """Assert the gameweek won't be saved if constraints violated."""
+        factory_gameweek()
+        with pytest.raises(IntegrityError):
+            factory_gameweek()
+
     def test_delete(self):
         """Assert the gameweek can be deleted."""
         gameweek = factory_gameweek()
@@ -40,6 +47,11 @@ class TestGameweek:
         for i in range(num_gameweeks := 5):
             factory_gameweek(fpl_id=i, name=f"gameweek {i}")
         assert Gameweek.count() == num_gameweeks
+
+    def test_exists(self):
+        """Assert a gameweek entry exists."""
+        gameweek = factory_gameweek()
+        assert Gameweek.exists(gameweek)
 
     def test_find(self, data):
         """Assert a matching gameweek object can be found."""
@@ -70,21 +82,3 @@ class TestGameweek:
         assert table_constraint
         for index_constraint in Gameweek.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        gameweeks = []
-        for i in range(num_gameweeks_inserted := 5):
-            data.update({"fpl_id": i, "name": f"gameweek {i}"})
-            gameweeks.append(deepcopy(data))
-        Gameweek.bulk_upsert(gameweeks)
-        assert Gameweek.count() == num_gameweeks_inserted
-
-        # Test updating entries
-        gameweeks = []
-        for i in range(3):
-            data.update({"fpl_id": i, "name": f"new name {i}"})
-            gameweeks.append(deepcopy(data))
-        Gameweek.bulk_upsert(gameweeks)
-        assert Gameweek.count() == num_gameweeks_inserted

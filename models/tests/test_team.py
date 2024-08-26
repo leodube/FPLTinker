@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Team
 from tests import factory_team, team_data
@@ -22,6 +23,12 @@ class TestTeam:
         team = factory_team()
         assert team.id
 
+    def test_save_with_conflict(self):
+        """Assert the stat details won't be saved if constraints violated."""
+        factory_team()
+        with pytest.raises(IntegrityError):
+            factory_team()
+
     def test_delete(self):
         """Assert the team can be deleted."""
         team = factory_team()
@@ -40,6 +47,11 @@ class TestTeam:
         for i in range(num_teams := 5):
             factory_team(code=i, name=f"team {i}")
         assert Team.count() == num_teams
+
+    def test_exists(self):
+        """Assert a team entry exists."""
+        team = factory_team()
+        assert Team.exists(team)
 
     def test_find(self, data):
         """Assert a matching team object can be found."""
@@ -70,21 +82,3 @@ class TestTeam:
         assert table_constraint
         for index_constraint in Team.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        teams = []
-        for i in range(num_teams_inserted := 5):
-            data.update({"code": i, "name": f"team {i}"})
-            teams.append(deepcopy(data))
-        Team.bulk_upsert(teams)
-        assert Team.count() == num_teams_inserted
-
-        # Test updating entries
-        teams = []
-        for i in range(3):
-            data.update({"code": i, "name": f"new name {i}"})
-            teams.append(deepcopy(data))
-        Team.bulk_upsert(teams)
-        assert Team.count() == num_teams_inserted

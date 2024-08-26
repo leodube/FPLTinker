@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import StatDetails
 from tests import factory_stat_details, stat_details_data
@@ -22,6 +23,12 @@ class TestStatDetails:
         stat_details = factory_stat_details()
         assert stat_details.id
 
+    def test_save_with_conflict(self):
+        """Assert the stat details won't be saved if constraints violated."""
+        factory_stat_details()
+        with pytest.raises(IntegrityError):
+            factory_stat_details()
+
     def test_delete(self):
         """Assert the stat details can be deleted."""
         stat_details = factory_stat_details()
@@ -40,6 +47,11 @@ class TestStatDetails:
         for i in range(num_stat_details := 5):
             factory_stat_details(name=f"stat details {i}")
         assert StatDetails.count() == num_stat_details
+
+    def test_exists(self):
+        """Assert a stat details entry exists."""
+        stat_details = factory_stat_details()
+        assert StatDetails.exists(stat_details)
 
     def test_find(self, data):
         """Assert a matching stat details object can be found."""
@@ -69,21 +81,3 @@ class TestStatDetails:
         assert table_constraint
         for index_constraint in StatDetails.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        stat_details = []
-        for i in range(num_stat_details_inserted := 5):
-            data.update({"name": f"stat details {i}"})
-            stat_details.append(deepcopy(data))
-        StatDetails.bulk_upsert(stat_details)
-        assert StatDetails.count() == num_stat_details_inserted
-
-        # Test updating entries
-        stat_details = []
-        for i in range(3):
-            data.update({"name": f"stat details {i}", "label": "new label"})
-            stat_details.append(deepcopy(data))
-        StatDetails.bulk_upsert(stat_details)
-        assert StatDetails.count() == num_stat_details_inserted

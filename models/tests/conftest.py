@@ -28,9 +28,10 @@ def db(app, metadata):  # pylint: disable=redefined-outer-name
     """Returns a session-wide initialised database."""
     with app.app_context():
         # Recreate database
+        _db.create_all()
+        Migrate(app, _db)
         downgrade(revision="base")
         metadata.drop_all(_db.engine)
-        Migrate(app, _db)
         upgrade()
         yield _db
 

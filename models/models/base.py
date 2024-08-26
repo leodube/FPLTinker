@@ -2,8 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import select
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import select, exists
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import db, intpk, timestamp
@@ -54,6 +53,14 @@ class Base(db.Model):
         return len(cls.find_all(**kwargs).all())
 
     @classmethod
+    def exists(cls, entry):
+        """Check whether an entry matching the args exists."""
+        stmt = select(cls)
+        for constraint in cls.index_constraints():
+            stmt = stmt.where(getattr(cls, constraint) == getattr(entry, constraint))
+        return db.session.query(exists(stmt))
+
+    @classmethod
     def find(cls, **kwargs):
         """Find a single entry that matches the passed args."""
         return cls.find_all(**kwargs).first()
@@ -76,25 +83,3 @@ class Base(db.Model):
     def rollback(cls):
         """Rollback any pending changes."""
         db.session.rollback()
-
-    @classmethod
-    def on_conflict_set(cls, vals: dict) -> dict:
-        """Determines what values to update during the upsert operation.
-        Generally we want to keep the id and created_at date from the
-        original insert."""
-        vals.pop("id", None)
-        vals.pop("created_at", None)
-        return vals
-
-    @classmethod
-    def bulk_upsert(cls, rows) -> list:
-        """Insert multiple rows in the database from an array of dictionaries.
-        If a conflicting entry is found, update that entry instead."""
-        stmt = insert(cls).values(rows)
-        stmt = stmt.on_conflict_do_update(
-            index_elements=cls.index_constraints(),
-            set_=cls.on_conflict_set({**stmt.excluded}),
-        ).returning(cls)
-        objs = db.session.scalars(stmt)
-        db.session.commit()
-        return objs.all()

@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from models.models import Configuration
 from tests import configuration_data, factory_configuration
@@ -22,6 +23,12 @@ class TestConfiguration:
         configuration = factory_configuration()
         assert configuration.id
 
+    def test_save_with_conflict(self):
+        """Assert the configuration won't be saved if constraints violated."""
+        factory_configuration()
+        with pytest.raises(IntegrityError):
+            factory_configuration()
+
     def test_delete(self):
         """Assert the configuration can be deleted."""
         configuration = factory_configuration()
@@ -40,6 +47,11 @@ class TestConfiguration:
         for i in range(num_configs := 5):
             factory_configuration(name=f"config {i}")
         assert Configuration.count() == num_configs
+
+    def test_exists(self):
+        """Assert a configuration entry exists."""
+        configuration = factory_configuration()
+        assert Configuration.exists(configuration)
 
     def test_find(self, data):
         """Assert a matching configuration object can be found."""
@@ -168,21 +180,3 @@ class TestConfiguration:
         assert table_constraint
         for index_constraint in Configuration.index_constraints():
             assert table_constraint.contains_column(table.c[index_constraint])
-
-    def test_bulk_upsert(self, data):
-        """Assert entries can be inserted and updated."""
-        # Test inserting entries
-        configs = []
-        for i in range(num_configs_inserted := 5):
-            data.update({"name": f"config {i}"})
-            configs.append(deepcopy(data))
-        Configuration.bulk_upsert(configs)
-        assert Configuration.count() == num_configs_inserted
-
-        # Test updating entries
-        configs = []
-        for i in range(3):
-            data.update({"name": f"config {i}", "value": "updated val"})
-            configs.append(deepcopy(data))
-        Configuration.bulk_upsert(configs)
-        assert Configuration.count() == num_configs_inserted
