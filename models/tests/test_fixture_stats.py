@@ -25,11 +25,6 @@ class TestFixtureStat:
     team_code_offset = 3  # used to prevent duplicate key on unique constraint
 
     @pytest.fixture
-    def data(self) -> dict:
-        """Returns a class-wide copy of the fixture stat data object."""
-        return deepcopy(fixture_stat_data)
-
-    @pytest.fixture
     def team(self) -> Team:
         """Returns a class-wide team instance."""
         return factory_team()
@@ -57,6 +52,22 @@ class TestFixtureStat:
         return factory_fixture(
             team_a_id=away_team.id, team_h_id=team.id, gameweek_id=gameweek.id
         )
+
+    @pytest.fixture
+    def data(
+        self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
+    ) -> dict:
+        """Returns a class-wide copy of the fixture stat data object."""
+        _data = deepcopy(fixture_stat_data)
+        _data.update(
+            {
+                "fixture_id": fixture.id,
+                "team_id": team.id,
+                "player_id": player.id,
+                "stat_details_id": stat_details.id,
+            }
+        )
+        return _data
 
     def test_save(
         self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
@@ -136,54 +147,21 @@ class TestFixtureStat:
             )
         assert FixtureStat.count() == num_fixture_stats
 
-    def test_exists(
-        self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
-    ):
-        """Assert a fixture stats entry exists."""
-        fixture_stats = factory_fixture_stat(
-            fixture_id=fixture.id,
-            team_id=team.id,
-            player_id=player.id,
-            stat_details_id=stat_details.id,
-        )
-        assert FixtureStat.exists(fixture_stats)
-
-    def test_find(  # pylint: disable=too-many-arguments
-        self,
-        data,
-        fixture: Fixture,
-        team: Team,
-        player: Player,
-        stat_details: StatDetails,
-    ):
+    def test_find(self, data):
         """Assert a matching fixture stats object can be found."""
-        data.update(
-            {
-                "fixture_id": fixture.id,
-                "team_id": team.id,
-                "player_id": player.id,
-                "stat_details_id": stat_details.id,
-            }
-        )
         fixture_stats = factory_fixture_stat(**data)
         assert fixture_stats == FixtureStat.find(**data)
 
-    def test_find_all(
-        self,
-        data,
-        fixture: Fixture,
-        player: Player,
-        stat_details: StatDetails,
-    ):
-        """Assert all matching fixture stats object can be found."""
-        data.update(
-            {
-                "fixture_id": fixture.id,
-                "player_id": player.id,
-                "stat_details_id": stat_details.id,
-            }
-        )
+    def test_find_instance(self, data):
+        """Assert a matching fixture stats object can be found."""
+        created = factory_fixture_stat(**data)
+        keys = FixtureStat.__dict__.keys()
+        team = FixtureStat(**{key: data[key] for key in keys if key in data})
+        found = FixtureStat.find_instance(team)
+        assert created == found
 
+    def test_find_all(self, data):
+        """Assert all matching fixture stats object can be found."""
         for i in range(num_fixture_stats := 5):
             data.update(
                 {"team_id": factory_team(code=i + self.team_code_offset).id, "value": i}

@@ -48,15 +48,18 @@ class TestStatDetails:
             factory_stat_details(name=f"stat details {i}")
         assert StatDetails.count() == num_stat_details
 
-    def test_exists(self):
-        """Assert a stat details entry exists."""
-        stat_details = factory_stat_details()
-        assert StatDetails.exists(stat_details)
-
     def test_find(self, data):
         """Assert a matching stat details object can be found."""
         stat_details = factory_stat_details(**data)
         assert stat_details == StatDetails.find(**data)
+
+    def test_find_instance(self, data):
+        """Assert a matching stat details object can be found."""
+        created = factory_stat_details(**data)
+        keys = StatDetails.__dict__.keys()
+        team = StatDetails(**{key: data[key] for key in keys if key in data})
+        found = StatDetails.find_instance(team)
+        assert created == found
 
     def test_find_all(self, data):
         """Assert all matching stat details object can be found."""

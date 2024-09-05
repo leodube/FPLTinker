@@ -33,6 +33,19 @@ class TestFixture:
         """Returns a class-wide home team instance."""
         return factory_team(code=2, name="Home Team")
 
+    @pytest.fixture
+    def data(self, gameweek: Gameweek, away_team: Team, home_team: Team) -> dict:
+        """Returns a class-wide copy of the fixture data object."""
+        _data = deepcopy(fixture_data)
+        _data.update(
+            {
+                "gameweek_id": gameweek.id,
+                "team_a_id": away_team.id,
+                "team_h_id": home_team.id,
+            }
+        )
+        return _data
+
     def test_save(self, gameweek: Gameweek, away_team: Team, home_team: Team):
         """Assert the fixture can be saved."""
         fixture = factory_fixture(
@@ -83,34 +96,21 @@ class TestFixture:
             )
         assert Fixture.count() == num_fixtures
 
-    def test_exists(self, gameweek: Gameweek, away_team: Team, home_team: Team):
-        """Assert a fixture entry exists."""
-        fixture = factory_fixture(
-            gameweek_id=gameweek.id, team_a_id=away_team.id, team_h_id=home_team.id
-        )
-        assert Fixture.exists(fixture)
-
-    def test_find(self, data, gameweek: Gameweek, away_team: Team, home_team: Team):
+    def test_find(self, data):
         """Assert a matching fixture object can be found."""
-        data.update(
-            {
-                "gameweek_id": gameweek.id,
-                "team_a_id": away_team.id,
-                "team_h_id": home_team.id,
-            }
-        )
         fixture = factory_fixture(**data)
         assert fixture == Fixture.find(**data)
 
-    def test_find_all(self, data, gameweek: Gameweek, away_team: Team, home_team: Team):
+    def test_find_instance(self, data):
+        """Assert a matching fixture object can be found."""
+        created = factory_fixture(**data)
+        keys = Fixture.__dict__.keys()
+        team = Fixture(**{key: data[key] for key in keys if key in data})
+        found = Fixture.find_instance(team)
+        assert created == found
+
+    def test_find_all(self, data):
         """Assert all matching fixture object can be found."""
-        data.update(
-            {
-                "gameweek_id": gameweek.id,
-                "team_a_id": away_team.id,
-                "team_h_id": home_team.id,
-            }
-        )
         for i in range(num_fixtures := 5):
             data.update({"code": i})
             factory_fixture(**data)

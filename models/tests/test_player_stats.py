@@ -22,16 +22,18 @@ class TestPlayerStats:
     """The class pytest grouping for the player stats model."""
 
     @pytest.fixture
-    def data(self) -> dict:
-        """Returns a class-wide copy of the player stats data object."""
-        return deepcopy(player_stats_data)
-
-    @pytest.fixture
     def player(self) -> Player:
         """Returns a class-wide player instance."""
         position = factory_position()
         team = factory_team()
         return factory_player(position_id=position.id, team_id=team.id)
+
+    @pytest.fixture
+    def data(self, player) -> dict:
+        """Returns a class-wide copy of the player stats data object."""
+        _data = deepcopy(player_stats_data)
+        _data.update({"player_id": player.id})
+        return _data
 
     def test_save(self, player: Player):
         """Assert the player stats can be saved."""
@@ -67,23 +69,24 @@ class TestPlayerStats:
             )
         assert PlayerStats.count() == num_player_stats
 
-    def test_exists(self, player: Player):
-        """Assert a player stats entry exists."""
-        player_stats = factory_player_stats(player_id=player.id)
-        assert PlayerStats.exists(player_stats)
-
-    def test_find(self, data, player: Player):
+    def test_find(self, data):
         """Assert a matching player stats object can be found."""
-        data.update({"player_id": player.id})
         player_stats = factory_player_stats(**data)
         assert player_stats == PlayerStats.find(**data)
 
-    def test_find_all(self, data, player: Player):
+    def test_find_instance(self, data):
+        """Assert a matching player stats object can be found."""
+        created = factory_player_stats(**data)
+        keys = PlayerStats.__dict__.keys()
+        team = PlayerStats(**{key: data[key] for key in keys if key in data})
+        found = PlayerStats.find_instance(team)
+        assert created == found
+
+    def test_find_all(self, data):
         """Assert all matching player stats object can be found."""
         for i in range(num_player_stats := 5):
             data.update(
                 {
-                    "player_id": player.id,
                     "season": date_utilities.add_to_season(20242025, -i),
                 }
             )

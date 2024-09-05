@@ -48,15 +48,18 @@ class TestGameweek:
             factory_gameweek(fpl_id=i, name=f"gameweek {i}")
         assert Gameweek.count() == num_gameweeks
 
-    def test_exists(self):
-        """Assert a gameweek entry exists."""
-        gameweek = factory_gameweek()
-        assert Gameweek.exists(gameweek)
-
     def test_find(self, data):
         """Assert a matching gameweek object can be found."""
         gameweek = factory_gameweek(**data)
         assert gameweek == Gameweek.find(**data)
+
+    def test_find_instance(self, data):
+        """Assert a matching gameweek object can be found."""
+        created = factory_gameweek(**data)
+        keys = Gameweek.__dict__.keys()
+        team = Gameweek(**{key: data[key] for key in keys if key in data})
+        found = Gameweek.find_instance(team)
+        assert created == found
 
     def test_find_all(self, data):
         """Assert all matching gameweek object can be found."""

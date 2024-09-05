@@ -14,11 +14,6 @@ class TestPlayer:
     """The class pytest grouping for the player model."""
 
     @pytest.fixture
-    def data(self) -> dict:
-        """Returns a class-wide copy of the player data object."""
-        return deepcopy(player_data)
-
-    @pytest.fixture
     def position(self) -> Position:
         """Returns a class-wide position instance."""
         return factory_position()
@@ -27,6 +22,13 @@ class TestPlayer:
     def team(self) -> Team:
         """Returns a class-wide team instance."""
         return factory_team()
+
+    @pytest.fixture
+    def data(self, position, team) -> dict:
+        """Returns a class-wide copy of the player data object."""
+        _data = deepcopy(player_data)
+        _data.update({"position_id": position.id, "team_id": team.id})
+        return _data
 
     def test_save(self, position: Position, team: Team):
         """Assert the player can be saved."""
@@ -68,25 +70,25 @@ class TestPlayer:
             )
         assert Player.count() == num_players
 
-    def test_exists(self, position: Position, team: Team):
-        """Assert a player entry exists."""
-        player = factory_player(position_id=position.id, team_id=team.id)
-        assert Player.exists(player)
-
-    def test_find(self, data, position: Position, team: Team):
+    def test_find(self, data):
         """Assert a matching player object can be found."""
-        data.update({"position_id": position.id, "team_id": team.id})
         player = factory_player(**data)
         assert player == Player.find(**data)
 
-    def test_find_all(self, data, position: Position, team: Team):
+    def test_find_instance(self, data):
+        """Assert a matching player object can be found."""
+        created = factory_player(**data)
+        keys = Player.__dict__.keys()
+        team = Player(**{key: data[key] for key in keys if key in data})
+        found = Player.find_instance(team)
+        assert created == found
+
+    def test_find_all(self, data):
         """Assert all matching player object can be found."""
         for i in range(num_players := 5):
             data.update(
                 {
                     "code": i,
-                    "position_id": position.id,
-                    "team_id": team.id,
                     "web_name": f"player {i}",
                 }
             )

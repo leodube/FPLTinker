@@ -48,15 +48,18 @@ class TestTeam:
             factory_team(code=i, name=f"team {i}")
         assert Team.count() == num_teams
 
-    def test_exists(self):
-        """Assert a team entry exists."""
-        team = factory_team()
-        assert Team.exists(team)
-
     def test_find(self, data):
         """Assert a matching team object can be found."""
         team = factory_team(**data)
         assert team == Team.find(**data)
+
+    def test_find_instance(self, data):
+        """Assert a matching team object can be found."""
+        created = factory_team(**data)
+        keys = Team.__dict__.keys()
+        team = Team(**{key: data[key] for key in keys if key in data})
+        found = Team.find_instance(team)
+        assert created == found
 
     def test_find_all(self, data):
         """Assert all matching team object can be found."""

@@ -48,15 +48,18 @@ class TestPosition:
             factory_position(fpl_id=i, singular_name=f"position {i}")
         assert Position.count() == num_positions
 
-    def test_exists(self):
-        """Assert a position entry exists."""
-        position = factory_position()
-        assert Position.exists(position)
-
     def test_find(self, data):
         """Assert a matching position object can be found."""
         position = factory_position(**data)
         assert position == Position.find(**data)
+
+    def test_find_instance(self, data):
+        """Assert a matching position object can be found."""
+        created = factory_position(**data)
+        keys = Position.__dict__.keys()
+        team = Position(**{key: data[key] for key in keys if key in data})
+        found = Position.find_instance(team)
+        assert created == found
 
     def test_find_all(self, data):
         """Assert all matching position object can be found."""

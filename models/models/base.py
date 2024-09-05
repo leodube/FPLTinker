@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import select, exists
+from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import db, intpk, timestamp
@@ -53,17 +53,17 @@ class Base(db.Model):
         return len(cls.find_all(**kwargs).all())
 
     @classmethod
-    def exists(cls, entry):
-        """Check whether an entry matching the args exists."""
-        stmt = select(cls)
-        for constraint in cls.index_constraints():
-            stmt = stmt.where(getattr(cls, constraint) == getattr(entry, constraint))
-        return db.session.query(exists(stmt))
-
-    @classmethod
     def find(cls, **kwargs):
         """Find a single entry that matches the passed args."""
         return cls.find_all(**kwargs).first()
+
+    @classmethod
+    def find_instance(cls, obj):
+        """Find a single entry if the object passed already exists in the db."""
+        stmt = select(cls)
+        for constraint in cls.index_constraints():
+            stmt = stmt.where(getattr(cls, constraint) == getattr(obj, constraint))
+        return db.session.scalar(stmt)
 
     @classmethod
     def find_all(cls, **kwargs):

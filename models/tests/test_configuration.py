@@ -48,15 +48,18 @@ class TestConfiguration:
             factory_configuration(name=f"config {i}")
         assert Configuration.count() == num_configs
 
-    def test_exists(self):
-        """Assert a configuration entry exists."""
-        configuration = factory_configuration()
-        assert Configuration.exists(configuration)
-
     def test_find(self, data):
         """Assert a matching configuration object can be found."""
         config = factory_configuration(**data)
         assert config == Configuration.find(**data)
+
+    def test_find_instance(self, data):
+        """Assert a matching configuration object can be found."""
+        created = factory_configuration(**data)
+        keys = Configuration.__dict__.keys()
+        team = Configuration(**{key: data[key] for key in keys if key in data})
+        found = Configuration.find_instance(team)
+        assert created == found
 
     def test_find_all(self, data):
         """Assert all matching configuration object can be found."""
