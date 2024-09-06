@@ -1,14 +1,14 @@
-"""The database updater for the player stats model"""
+"""The database updater for the player stats model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Player, PlayerStats
 
-from .utils.db_utilities import apply_update
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the player stats fom the FPL api"""
+    """Updates the player stats fom the FPL api."""
     app.logger.debug("Updating player stats.")
 
     api_players = await fpl.get_players(return_json=True)

@@ -1,15 +1,15 @@
-"""The database updater for the position model"""
+"""The database updater for the position model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Position
 
-from .utils.date_utilities import is_today
-from .utils.db_utilities import apply_update
+from data_updater.utils.date_utilities import is_today
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the positions fom the FPL api"""
+    """Updates the positions fom the FPL api."""
     app.logger.debug("Updating positions.")
 
     # Return if updater already ran today

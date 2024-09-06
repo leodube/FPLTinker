@@ -1,14 +1,14 @@
-"""The database updater for the fixture stats model"""
+"""The database updater for the fixture stats model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Fixture, FixtureStat, Player, StatDetails
 
-from .utils.db_utilities import apply_update
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the fixtures stats fom the FPL api"""
+    """Updates the fixtures stats fom the FPL api."""
     app.logger.debug("Updating fixtures stats.")
 
     api_fixtures = await fpl.get_fixtures(return_json=True)
@@ -19,6 +19,10 @@ async def update(app: Flask, fpl: FPL):
     for f in api_fixtures:
         # Return if no fixture stats
         if not f["stats"]:
+            import pprint
+
+            if f["event"] == 3:
+                pprint.pprint(f)
             continue
 
         fixture = Fixture.find(fpl_id=f["id"], season=season)

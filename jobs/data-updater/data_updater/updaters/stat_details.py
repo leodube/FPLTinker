@@ -1,14 +1,14 @@
-"""The database updater for the stat details model"""
+"""The database updater for the stat details model."""
 
 from flask import Flask
 from models import PlayerStats, StatDetails
 
-from .utils.db_utilities import apply_update
-from .utils.stat_details import get_stat_details
+from data_updater.utils.db_utilities import apply_update
+from data_updater.utils.stat_details import get_stat_details
 
 
 def update(app: Flask):
-    """Updates the stat details"""
+    """Updates the stat details."""
     app.logger.debug("Updating stat details.")
 
     stat_names = PlayerStats.__dict__.keys()

@@ -2,20 +2,21 @@
 
 import asyncio
 import logging.config
+import os
 import sys
 from os import path
 
 from flask import Flask
 from models import db
 
-from data_updater.config import Config
+from config import CONFIGURATION
 from data_updater.worker import run
 
 
-def create_app():
+def create_app(run_mode=os.getenv("FLASK_ENV", "production")):
     """Returns a configured Flask App using the Factory method."""
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(CONFIGURATION[run_mode])
     db.init_app(app)
     return app
 

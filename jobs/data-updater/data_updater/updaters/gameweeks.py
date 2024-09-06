@@ -1,14 +1,14 @@
-"""The database updater for the gameweek model"""
+"""The database updater for the gameweek model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Gameweek, Player
 
-from .utils.db_utilities import apply_update
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the gameweeks fom the FPL api"""
+    """Updates the gameweeks fom the FPL api."""
     app.logger.debug("Updating gameweeks.")
 
     api_gameweeks = await fpl.get_gameweeks(include_live=True, return_json=True)

@@ -1,14 +1,14 @@
-"""The database updater for the team model"""
+"""The database updater for the team model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Team
 
-from .utils.db_utilities import apply_update
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the teams fom the FPL api"""
+    """Updates the teams fom the FPL api."""
     app.logger.debug("Updating teams.")
 
     api_teams = await fpl.get_teams(return_json=True)

@@ -1,4 +1,4 @@
-"""The database updater for the configuration model"""
+"""The database updater for the configuration model."""
 
 from datetime import datetime
 
@@ -6,13 +6,13 @@ from flask import Flask
 from fpl import FPL
 from models import Configuration
 
-from .utils.config_details import get_config_details
-from .utils.date_utilities import is_today
-from .utils.db_utilities import apply_update
+from data_updater.utils.config_details import get_config_details
+from data_updater.utils.date_utilities import is_today
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the configurations"""
+    """Updates the configurations."""
     app.logger.debug("Updating configurations.")
 
     # Return if updater already ran today

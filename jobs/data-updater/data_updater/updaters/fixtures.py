@@ -1,35 +1,35 @@
-"""The database updater for the fixture model"""
+"""The database updater for the fixture model."""
 
 from flask import Flask
 from fpl import FPL
 from models import Configuration, Fixture, Gameweek, Team
 
-from .utils.db_utilities import apply_update
+from data_updater.utils.db_utilities import apply_update
 
 
 async def update(app: Flask, fpl: FPL):
-    """Updates the fixtures fom the FPL api"""
+    """Updates the fixtures fom the FPL api."""
     app.logger.debug("Updating fixtures.")
 
     # FUTURE: fdr = await fpl.FDR()
-    fpl_fixtures = await fpl.get_fixtures(return_json=True)
+    api_fixtures = await fpl.get_fixtures(return_json=True)
     season = Configuration.get("season")
 
     # Update fixtures
     fixtures = []
-    for ff in fpl_fixtures:
+    for f in api_fixtures:
         # Set base attributes
-        ff["fpl_id"] = ff["id"]
-        ff["season"] = season
+        f["fpl_id"] = f["id"]
+        f["season"] = season
 
         # Set foreign key attributes
-        ff["gameweek_id"] = Gameweek.find(fpl_id=ff["event"], season=season).id
-        ff["team_a_id"] = Team.find(fpl_id=ff["team_a"], season=season).id
-        ff["team_h_id"] = Team.find(fpl_id=ff["team_h"], season=season).id
+        f["gameweek_id"] = Gameweek.find(fpl_id=f["event"], season=season).id
+        f["team_a_id"] = Team.find(fpl_id=f["team_a"], season=season).id
+        f["team_h_id"] = Team.find(fpl_id=f["team_h"], season=season).id
 
         # Generate dict
         keys = Fixture.__dict__.keys()
-        fixture = {key: ff[key] for key in keys if key in ff}
+        fixture = {key: f[key] for key in keys if key in f}
 
         # Delete conflicts
         del fixture["stats"]
