@@ -4,6 +4,7 @@ from copy import deepcopy
 
 from models.models import (
     Configuration,
+    FDR,
     Fixture,
     FixtureStat,
     Gameweek,
@@ -19,6 +20,15 @@ configuration_data = {
     "value": "12345",
     "_type": Configuration.ConfigurationTypes.INTEGER,
     "description": "config description",
+}
+
+fdr_data = {
+    "team_id": 1,
+    "team_name": "Arsenal",
+    "_type": FDR.FDRTypes.ALL,
+    "home": 1,
+    "away": 0.5,
+    "season": 20242025,
 }
 
 fixture_stat_data = {
@@ -198,6 +208,15 @@ def factory_configuration(**kwargs):
     configuration = Configuration(**data)
     configuration.save()
     return configuration
+
+
+def factory_fdr(**kwargs):
+    """Create a fdr entity."""
+    data = deepcopy(fdr_data)
+    data.update({**kwargs})
+    fdr = FDR(**data)
+    fdr.save()
+    return fdr
 
 
 def factory_fixture_stat(**kwargs):

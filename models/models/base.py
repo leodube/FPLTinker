@@ -32,16 +32,24 @@ class Base(db.Model):
     # Base properties
     id: Mapped[intpk] = mapped_column(init=False, sort_order=-2)
 
+    # Base methods
     def save(self):
         """Save the object to the database."""
         db.session.add(self)
         db.session.commit()
+
+    def update(self, index_constraints, **kwargs):
+        """Update the object attributes."""
+        for key, value in kwargs.items():
+            if key not in index_constraints:
+                setattr(self, key, value)
 
     def delete(self):
         """Delete the object from the database."""
         db.session.delete(self)
         db.session.commit()
 
+    # Base class methods
     @classmethod
     def all(cls):
         """Get all entries for the object."""

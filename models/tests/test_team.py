@@ -24,7 +24,7 @@ class TestTeam:
         assert team.id
 
     def test_save_with_conflict(self):
-        """Assert the stat details won't be saved if constraints violated."""
+        """Assert the team won't be saved if constraints violated."""
         factory_team()
         with pytest.raises(IntegrityError):
             factory_team()

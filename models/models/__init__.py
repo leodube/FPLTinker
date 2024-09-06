@@ -3,6 +3,7 @@
 from .base import Base, WithTimestamps
 from .configuration import Configuration
 from .db import SQLAlchemyBase, db
+from .fdr import FDR
 from .fixture import Fixture
 from .fixture_stat import FixtureStat
 from .gameweek import Gameweek
@@ -18,6 +19,7 @@ __all__ = (
     "Base",
     "Configuration",
     "db",
+    "FDR",
     "FixtureStat",
     "Fixture",
     "Gameweek",
