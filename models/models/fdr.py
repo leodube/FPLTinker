@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 from decimal import Decimal
-from typing import List, Optional
+from typing import Optional
 from enum import Enum, auto
 
 from sqlalchemy.orm import Mapped, mapped_column
@@ -12,7 +12,7 @@ from .db import db
 
 
 class FDR(Base, WithTimestamps):
-    """A class representing a Fixture Difficulty Rating in Fantasy Premier League."""
+    """A class representing a Fixture Difficulty Ranking in Fantasy Premier League."""
 
     __tablename__ = "fdr"
     __table_args__ = (db.UniqueConstraint("team_id", "type"),)

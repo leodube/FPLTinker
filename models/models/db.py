@@ -22,7 +22,7 @@ optional_timestamp = Annotated[  # pylint: disable=invalid-name
 
 
 class SQLAlchemyBase(  # pylint: disable=too-few-public-methods
-    DeclarativeBase, MappedAsDataclass
+    DeclarativeBase, MappedAsDataclass, eq=False
 ):
     """The SQLAlchemy base model that adds support for declarative mapping and
     dataclass functionality"""

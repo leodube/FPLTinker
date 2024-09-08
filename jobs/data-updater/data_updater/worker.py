@@ -6,6 +6,7 @@ from fpl import FPL
 
 from data_updater.updaters import (
     configurations,
+    fdr,
     fixture_stats,
     fixtures,
     gameweeks,
@@ -22,13 +23,14 @@ async def run(app: Flask):
     async with aiohttp.ClientSession() as session:
         app.logger.debug("Running data updater.")
         fpl = FPL(session)
-        await configurations.update(app, fpl)
-        stat_details.update(app)
-        await teams.update(app, fpl)
-        await positions.update(app, fpl)
-        await players.update(app, fpl)
-        await player_stats.update(app, fpl)
-        await gameweeks.update(app, fpl)
-        await fixtures.update(app, fpl)
-        await fixture_stats.update(app, fpl)
+        # await configurations.update(app, fpl)
+        # stat_details.update(app)
+        # await teams.update(app, fpl)
+        # await positions.update(app, fpl)
+        # await players.update(app, fpl)
+        # await player_stats.update(app, fpl)
+        # await gameweeks.update(app, fpl)
+        # await fixtures.update(app, fpl)
+        # await fixture_stats.update(app, fpl)
+        await fdr.update(app, fpl)
         app.logger.debug("Finished running data updater.")

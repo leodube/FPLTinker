@@ -24,6 +24,7 @@ def apply_update(app: Flask, model: BaseModelType, entries_data: List[dict]):
                 found.save()
                 num_updated += 1
             else:
+                pass
                 entry.save()
 
         num_added = model.count() - db_count_before
@@ -35,3 +36,4 @@ def apply_update(app: Flask, model: BaseModelType, entries_data: List[dict]):
     except SQLAlchemyError as err:
         model.rollback()
         app.logger.error(f"Failed to update table. See error: {err}")
+

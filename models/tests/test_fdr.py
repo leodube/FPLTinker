@@ -93,4 +93,6 @@ class TestFDR:
         )
         assert table_constraint
         for index_constraint in FDR.index_constraints():
+            if index_constraint == "_type":
+                index_constraint = "type"
             assert table_constraint.contains_column(table.c[index_constraint])
