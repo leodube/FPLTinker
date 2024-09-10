@@ -1,14 +1,14 @@
-"""Team model"""
+"""FDR model"""
 
 from __future__ import annotations
-from decimal import Decimal
-from typing import Optional
+
 from enum import Enum, auto
+from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, WithTimestamps
-from .db import db
+from .db import db, stat
 
 
 class FDR(Base, WithTimestamps):
@@ -28,13 +28,14 @@ class FDR(Base, WithTimestamps):
 
         @classmethod
         def list(cls):
+            """Returns the enum as a list"""
             return list(map(lambda c: c, cls))
 
     # FPL api properties
     team_name: Mapped[str]
     _type: Mapped[FDRTypes] = mapped_column("type")
-    home: Mapped[Decimal]
-    away: Mapped[Decimal]
+    home: Mapped[stat]
+    away: Mapped[stat]
 
     # Foreign Keys
     team_id: Mapped[int] = mapped_column(db.ForeignKey("teams.id"), sort_order=-1)

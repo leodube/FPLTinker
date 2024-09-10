@@ -1,7 +1,9 @@
 """Base model"""
 
+from dataclasses import asdict
 from datetime import datetime
 
+from deepdiff import DeepDiff
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -48,6 +50,10 @@ class Base(db.Model):
         """Delete the object from the database."""
         db.session.delete(self)
         db.session.commit()
+
+    def __sub__(self, other) -> dict | None:
+        """Compare instances of the object."""
+        return DeepDiff(asdict(self), asdict(other))
 
     # Base class methods
     @classmethod

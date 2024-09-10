@@ -1,12 +1,11 @@
 """PlayerStats model"""
 
-from decimal import Decimal
 from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, WithTimestamps
-from .db import db
+from .db import db, stat
 
 
 class PlayerStats(Base, WithTimestamps):
@@ -20,48 +19,48 @@ class PlayerStats(Base, WithTimestamps):
     bonus: Mapped[int]
     bps: Mapped[int]
     clean_sheets: Mapped[int]
-    clean_sheets_per_90: Mapped[Decimal]
+    clean_sheets_per_90: Mapped[stat]
     cost_change_event: Mapped[int]
     cost_change_event_fall: Mapped[int]
     cost_change_start: Mapped[int]
     cost_change_start_fall: Mapped[int]
-    creativity: Mapped[Decimal]
+    creativity: Mapped[stat]
     dreamteam_count: Mapped[int]
     event_points: Mapped[int]
-    expected_assists: Mapped[Decimal]
-    expected_assists_per_90: Mapped[Decimal]
-    expected_goal_involvements: Mapped[Decimal]
-    expected_goal_involvements_per_90: Mapped[Decimal]
-    expected_goals: Mapped[Decimal]
-    expected_goals_per_90: Mapped[Decimal]
-    expected_goals_conceded: Mapped[Decimal]
-    expected_goals_conceded_per_90: Mapped[Decimal]
-    form: Mapped[Decimal]
+    expected_assists: Mapped[stat]
+    expected_assists_per_90: Mapped[stat]
+    expected_goal_involvements: Mapped[stat]
+    expected_goal_involvements_per_90: Mapped[stat]
+    expected_goals: Mapped[stat]
+    expected_goals_per_90: Mapped[stat]
+    expected_goals_conceded: Mapped[stat]
+    expected_goals_conceded_per_90: Mapped[stat]
+    form: Mapped[stat]
     goals_conceded: Mapped[int]
-    goals_conceded_per_90: Mapped[Decimal]
+    goals_conceded_per_90: Mapped[stat]
     goals_scored: Mapped[int]
-    ict_index: Mapped[Decimal]
-    influence: Mapped[Decimal]
+    ict_index: Mapped[stat]
+    influence: Mapped[stat]
     minutes: Mapped[int]
     now_cost: Mapped[int]
     own_goals: Mapped[int]
     penalties_missed: Mapped[int]
     penalties_saved: Mapped[int]
-    points_per_game: Mapped[Decimal]
+    points_per_game: Mapped[stat]
     red_cards: Mapped[int]
     saves: Mapped[int]
-    saves_per_90: Mapped[Decimal]
-    selected_by_percent: Mapped[Decimal]
+    saves_per_90: Mapped[stat]
+    selected_by_percent: Mapped[stat]
     starts: Mapped[int]
-    starts_per_90: Mapped[Decimal]
-    threat: Mapped[Decimal]
+    starts_per_90: Mapped[stat]
+    threat: Mapped[stat]
     total_points: Mapped[int]
     transfers_in: Mapped[int]
     transfers_in_event: Mapped[int]
     transfers_out: Mapped[int]
     transfers_out_event: Mapped[int]
-    value_form: Mapped[Decimal]
-    value_season: Mapped[Decimal]
+    value_form: Mapped[stat]
+    value_season: Mapped[stat]
     yellow_cards: Mapped[int]
 
     # Additional properties

@@ -3,8 +3,8 @@
 from copy import deepcopy
 
 from models.models import (
-    Configuration,
     FDR,
+    Configuration,
     Fixture,
     FixtureStat,
     Gameweek,

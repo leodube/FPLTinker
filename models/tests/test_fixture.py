@@ -14,11 +14,6 @@ class TestFixture:
     """The class pytest grouping for the fixture model."""
 
     @pytest.fixture
-    def data(self) -> dict:
-        """Returns a class-wide copy of the fixture data object."""
-        return deepcopy(fixture_data)
-
-    @pytest.fixture
     def gameweek(self) -> Gameweek:
         """Returns a class-wide gameweek instance."""
         return factory_gameweek()

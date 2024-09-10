@@ -36,8 +36,8 @@ def upgrade():
             ),
             nullable=False,
         ),
-        sa.Column("home", sa.Numeric(), nullable=False),
-        sa.Column("away", sa.Numeric(), nullable=False),
+        sa.Column("home", sa.Numeric(8, 2), nullable=False),
+        sa.Column("away", sa.Numeric(8, 2), nullable=False),
         sa.Column("season", sa.Integer(), nullable=True),
         sa.Column(
             "created_at",

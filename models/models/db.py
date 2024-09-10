@@ -6,7 +6,7 @@ These will get initialized by the application using the models
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import Numeric, func
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, mapped_column
 from typing_extensions import Annotated
 
@@ -19,6 +19,7 @@ optional_timestamp = Annotated[  # pylint: disable=invalid-name
     datetime,
     mapped_column(nullable=True, server_default=func.CURRENT_TIMESTAMP()),
 ]
+stat = Annotated[float, mapped_column(Numeric(8, 2))]  # pylint: disable=invalid-name
 
 
 class SQLAlchemyBase(  # pylint: disable=too-few-public-methods
