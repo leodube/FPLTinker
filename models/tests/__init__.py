@@ -76,7 +76,7 @@ gameweek_data = {
     "most_selected": None,
     "most_transferred_in": None,
     "most_vice_captained": None,
-    "release_time": None,
+    "release_time": "2024-08-14 17:30:00",
     "top_player_id": None,
     "season": 20242025,
 }

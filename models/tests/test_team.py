@@ -1,7 +1,7 @@
 """Test suite to ensure the team model is working as expected."""
 
 from copy import deepcopy
-
+import typing
 import pytest
 from sqlalchemy.exc import IntegrityError
 
@@ -35,6 +35,12 @@ class TestTeam:
         assert team.id
         team.delete()
         assert Team.count() == 0
+
+    def test_diff(self):
+        """Assert the team object can be diffed."""
+        team_1 = factory_team(code=1, name=f"team 1")
+        team_2 = factory_team(code=2, name=f"team 2")
+        assert team_1.diff(team_2)
 
     def test_all(self):
         """Assert all entries can be found for the team."""

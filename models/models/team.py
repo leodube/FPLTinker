@@ -15,6 +15,14 @@ class Team(Base, WithTimestamps):
 
     __tablename__ = "teams"
 
+    # Serializer config
+    serialize_rules = (
+        "-id",
+        "-created_at",
+        "-updated_at",
+        "-players",
+    )
+
     # FPL api properties
     fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     code: Mapped[int] = mapped_column(unique=True, sort_order=-1)
@@ -38,7 +46,9 @@ class Team(Base, WithTimestamps):
     strength_defence_away: Mapped[int]
 
     # Relationships
-    players: Mapped[List["Player"]] = db.relationship(back_populates="team", init=False)
+    players: Mapped[List["Player"]] = db.relationship(
+        back_populates="team", init=False, repr=False
+    )
 
     # Additional properties
     season: Mapped[Optional[int]]

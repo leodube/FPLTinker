@@ -51,9 +51,14 @@ class Base(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def __sub__(self, other) -> dict | None:
+    def diff(self, other) -> dict | None:
         """Compare instances of the object."""
-        return DeepDiff(asdict(self), asdict(other))
+        return DeepDiff(
+            self.to_dict(),
+            other.to_dict(),
+            significant_digits=2,
+            ignore_numeric_type_changes=True,
+        )
 
     # Base class methods
     @classmethod

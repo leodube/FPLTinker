@@ -14,14 +14,22 @@ from .db import db
 class Configuration(Base, WithTimestamps):
     """A class representing a configuration for the application."""
 
-    __tablename__ = "configurations"
-
     class ConfigurationTypes(Enum):
         """Enum of the configuration types."""
 
         BOOLEAN = auto()
         STRING = auto()
         INTEGER = auto()
+
+    __tablename__ = "configurations"
+
+    # Serializer config
+    serialize_rules = (
+        "-id",
+        "-created_at",
+        "-updated_at",
+    )
+    serialize_types = ((ConfigurationTypes, lambda x: 1),)
 
     name: Mapped[str] = mapped_column(unique=True)
     value: Mapped[str]

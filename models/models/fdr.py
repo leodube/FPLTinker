@@ -17,6 +17,13 @@ class FDR(Base, WithTimestamps):
     __tablename__ = "fdr"
     __table_args__ = (db.UniqueConstraint("team_id", "type"),)
 
+    # Serializer config
+    serialize_rules = (
+        "-id",
+        "-created_at",
+        "-updated_at",
+    )
+
     class FDRTypes(Enum):
         """Enum of the FDR types."""
 
