@@ -1,6 +1,5 @@
 """Base model"""
 
-from dataclasses import asdict
 from datetime import datetime
 
 from deepdiff import DeepDiff
@@ -51,11 +50,16 @@ class Base(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def serialize(self) -> dict:
+        """Serialize the class instance."""
+        schema = self.__marshmallow__()
+        return schema.dump(self)
+
     def diff(self, other) -> dict | None:
         """Compare instances of the object."""
         return DeepDiff(
-            self.to_dict(),
-            other.to_dict(),
+            self.serialize(),
+            other.serialize(),
             significant_digits=2,
             ignore_numeric_type_changes=True,
         )

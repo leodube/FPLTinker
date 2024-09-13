@@ -36,6 +36,11 @@ class TestGameweek:
         gameweek.delete()
         assert Gameweek.count() == 0
 
+    def test_serialize(self):
+        """Assert the gameweek object can be serialized."""
+        gameweek = factory_gameweek()
+        assert gameweek.serialize()
+
     def test_all(self):
         """Assert all entries can be found for the gameweek."""
         for i in range(num_gameweeks := 5):

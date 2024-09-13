@@ -1,11 +1,13 @@
 """Test suite to ensure the team model is working as expected."""
 
 from copy import deepcopy
-import typing
+
 import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import Team
+
+# from models.schemas import Schema
 from tests import factory_team, team_data
 
 
@@ -36,10 +38,16 @@ class TestTeam:
         team.delete()
         assert Team.count() == 0
 
+    def test_serialize(self):
+        """Assert the team object can be serialized."""
+        team = factory_team()
+        assert team.serialize()
+
     def test_diff(self):
         """Assert the team object can be diffed."""
         team_1 = factory_team(code=1, name=f"team 1")
         team_2 = factory_team(code=2, name=f"team 2")
+        print(team_1.diff(team_2))
         assert team_1.diff(team_2)
 
     def test_all(self):

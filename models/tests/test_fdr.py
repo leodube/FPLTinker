@@ -43,6 +43,11 @@ class TestFDR:
         fdr.delete()
         assert FDR.count() == 0
 
+    def test_serialize(self, team: Team):
+        """Assert the fdr object can be serialized."""
+        fdr = factory_fdr(team_id=team.id)
+        assert fdr.serialize()
+
     def test_all(self, team):
         """Assert all entries can be found for the fdr."""
         types = FDR.FDRTypes.list()

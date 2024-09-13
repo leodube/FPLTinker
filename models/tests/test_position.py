@@ -36,6 +36,11 @@ class TestPosition:
         position.delete()
         assert Position.count() == 0
 
+    def test_serialize(self):
+        """Assert the position object can be serialized."""
+        position = factory_position()
+        assert position.serialize()
+
     def test_all(self):
         """Assert all entries can be found for the position."""
         for i in range(num_positions := 5):

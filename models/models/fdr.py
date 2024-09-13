@@ -14,16 +14,6 @@ from .db import db, stat
 class FDR(Base, WithTimestamps):
     """A class representing a Fixture Difficulty Ranking in Fantasy Premier League."""
 
-    __tablename__ = "fdr"
-    __table_args__ = (db.UniqueConstraint("team_id", "type"),)
-
-    # Serializer config
-    serialize_rules = (
-        "-id",
-        "-created_at",
-        "-updated_at",
-    )
-
     class FDRTypes(Enum):
         """Enum of the FDR types."""
 
@@ -37,6 +27,9 @@ class FDR(Base, WithTimestamps):
         def list(cls):
             """Returns the enum as a list"""
             return list(map(lambda c: c, cls))
+
+    __tablename__ = "fdr"
+    __table_args__ = (db.UniqueConstraint("team_id", "type"),)
 
     # FPL api properties
     team_name: Mapped[str]

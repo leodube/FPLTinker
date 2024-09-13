@@ -53,6 +53,11 @@ class TestPlayerStats:
         player_stats.delete()
         assert PlayerStats.count() == 0
 
+    def test_serialize(self, player: Player):
+        """Assert the player stats object can be serialized."""
+        player_stats = factory_player_stats(player_id=player.id)
+        assert player_stats.serialize()
+
     def test_all(self, player: Player):
         """Assert all entries can be found for the player stats."""
         for i in range(num_player_stats := 5):

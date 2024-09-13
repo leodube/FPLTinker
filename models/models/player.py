@@ -14,8 +14,6 @@ from .db import db
 class Player(Base, WithTimestamps):
     """A class representing a player in Fantasy Premier League."""
 
-    __tablename__ = "players"
-
     class PlayerStatuses(Enum):
         """Enum of the player statuses."""
 
@@ -25,6 +23,8 @@ class Player(Base, WithTimestamps):
         NOT_ELIGIBLE = "n"
         SUSPENDED = "s"
         UNAVAILABLE = "u"
+
+    __tablename__ = "players"
 
     # FPL api properties
     fpl_id: Mapped[int] = mapped_column(sort_order=-1)

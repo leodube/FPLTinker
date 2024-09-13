@@ -15,14 +15,6 @@ class Team(Base, WithTimestamps):
 
     __tablename__ = "teams"
 
-    # Serializer config
-    serialize_rules = (
-        "-id",
-        "-created_at",
-        "-updated_at",
-        "-players",
-    )
-
     # FPL api properties
     fpl_id: Mapped[int] = mapped_column(sort_order=-1)
     code: Mapped[int] = mapped_column(unique=True, sort_order=-1)

@@ -23,14 +23,6 @@ class Configuration(Base, WithTimestamps):
 
     __tablename__ = "configurations"
 
-    # Serializer config
-    serialize_rules = (
-        "-id",
-        "-created_at",
-        "-updated_at",
-    )
-    serialize_types = ((ConfigurationTypes, lambda x: 1),)
-
     name: Mapped[str] = mapped_column(unique=True)
     value: Mapped[str]
     _type: Mapped[ConfigurationTypes] = mapped_column("type")

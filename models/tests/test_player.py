@@ -48,6 +48,11 @@ class TestPlayer:
         player.delete()
         assert Player.count() == 0
 
+    def test_serialize(self, position: Position, team: Team):
+        """Assert the player object can be serialized."""
+        player = factory_player(position_id=position.id, team_id=team.id)
+        assert player.serialize()
+
     def test_all(self, position: Position, team: Team):
         """Assert all entries can be found for the player."""
         for i in range(num_players := 5):

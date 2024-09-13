@@ -1,6 +1,5 @@
-"""Exports all of the models and schemas used by the application."""
+"""Exports all of the models used by the application."""
 
-from .base import Base, WithTimestamps
 from .configuration import Configuration
 from .db import SQLAlchemyBase, db
 from .fdr import FDR
@@ -16,9 +15,7 @@ from .tinker import Tinker
 from .weighting import Weighting
 
 __all__ = (
-    "Base",
     "Configuration",
-    "db",
     "FDR",
     "FixtureStat",
     "Fixture",
@@ -31,5 +28,4 @@ __all__ = (
     "Team",
     "Tinker",
     "Weighting",
-    "WithTimestamps",
 )

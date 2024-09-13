@@ -36,6 +36,11 @@ class TestStatDetails:
         stat_details.delete()
         assert StatDetails.count() == 0
 
+    def test_serialize(self):
+        """Assert the stat details object can be serialized."""
+        stat_details = stat_details = factory_stat_details()
+        assert stat_details.serialize()
+
     def test_all(self):
         """Assert all entries can be found for the stat details."""
         for i in range(num_stat_details := 5):

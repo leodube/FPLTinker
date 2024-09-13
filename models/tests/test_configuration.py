@@ -36,6 +36,11 @@ class TestConfiguration:
         configuration.delete()
         assert Configuration.count() == 0
 
+    def test_serialize(self):
+        """Assert the configuration object can be serialized."""
+        configuration = factory_configuration()
+        assert configuration.serialize()
+
     def test_all(self):
         """Assert all entries can be found for the configuration."""
         for i in range(num_configs := 5):

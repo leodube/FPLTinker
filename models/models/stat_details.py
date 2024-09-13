@@ -10,9 +10,6 @@ class StatDetails(Base):
 
     __tablename__ = "stat_details"
 
-    # Serializer config
-    serialize_rules = ("-id",)
-
     # Properties
     name: Mapped[str] = mapped_column(unique=True)
     label: Mapped[str]

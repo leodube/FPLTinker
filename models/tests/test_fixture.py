@@ -69,6 +69,13 @@ class TestFixture:
         fixture.delete()
         assert Fixture.count() == 0
 
+    def test_serialize(self, gameweek: Gameweek, away_team: Team, home_team: Team):
+        """Assert the fixture object can be serialized."""
+        fixture = factory_fixture(
+            gameweek_id=gameweek.id, team_a_id=away_team.id, team_h_id=home_team.id
+        )
+        assert fixture.serialize()
+
     def test_all(self, gameweek: Gameweek, away_team: Team, home_team: Team):
         """Assert all entries can be found for the fixture."""
         for i in range(num_fixtures := 5):

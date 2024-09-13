@@ -113,6 +113,18 @@ class TestFixtureStat:
         fixture_stats.delete()
         assert FixtureStat.count() == 0
 
+    def test_serialize(
+        self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
+    ):
+        """Assert the fixture stats object can be serialized."""
+        fixture_stats = factory_fixture_stat(
+            fixture_id=fixture.id,
+            team_id=team.id,
+            player_id=player.id,
+            stat_details_id=stat_details.id,
+        )
+        assert fixture_stats.serialize()
+
     def test_all(
         self,
         fixture: Fixture,
