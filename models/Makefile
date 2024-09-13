@@ -12,7 +12,7 @@ endif
 setup: clean install
 
 clean: clean-pyc clean-test ## Clean the project
-	rm -rf venv/
+	rm -rf .venv/
 
 clean-pyc: ## Clean cache files
 	find . -name '*.pyc' -exec rm -f {} +
