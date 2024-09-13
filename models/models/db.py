@@ -56,4 +56,4 @@ def generate_marshmallow_schemas():
                 schema_class_name, (SQLAlchemyAutoSchema,), {"Meta": Meta}
             )
 
-        setattr(_class, "__marshmallow__", schema_class)
+            setattr(_class, "__marshmallow__", schema_class)

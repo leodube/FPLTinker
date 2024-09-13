@@ -47,8 +47,10 @@ class TestTeam:
         """Assert the team object can be diffed."""
         team_1 = factory_team(code=1, name=f"team 1")
         team_2 = factory_team(code=2, name=f"team 2")
-        print(team_1.diff(team_2))
-        assert team_1.diff(team_2)
+        diff = team_1.diff(team_2, exclude=("id",))
+        assert diff
+        assert "code" in diff.affected_root_keys
+        assert "name" in diff.affected_root_keys
 
     def test_all(self):
         """Assert all entries can be found for the team."""

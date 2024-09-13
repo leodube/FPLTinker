@@ -50,18 +50,22 @@ class Base(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def serialize(self) -> dict:
+    def serialize(self, exclude: set = None) -> dict:
         """Serialize the class instance."""
         schema = self.__marshmallow__()
-        return schema.dump(self)
+        result = schema.dump(self)
+        for key in exclude or []:
+            result.pop(key, None)
+        return result
 
-    def diff(self, other) -> dict | None:
+    def diff(self, other, exclude: set = None) -> dict | None:
         """Compare instances of the object."""
         return DeepDiff(
-            self.serialize(),
-            other.serialize(),
+            self.serialize(exclude),
+            other.serialize(exclude),
             significant_digits=2,
             ignore_numeric_type_changes=True,
+            math_epsilon=0.01,
         )
 
     # Base class methods
