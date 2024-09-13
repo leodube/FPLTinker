@@ -2,7 +2,7 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, FDR, Team
+from models import FDR, Configuration, Team
 
 from data_updater.utils.db_utilities import apply_update
 
@@ -26,7 +26,7 @@ async def update(app: Flask, fpl: FPL):
                     "_type": FDR.FDRTypes[_type.upper()],
                     "home": ranking["H"],
                     "away": ranking["A"],
-                    "season": season
+                    "season": season,
                 }
             )
 

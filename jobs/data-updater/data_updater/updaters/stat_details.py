@@ -3,8 +3,8 @@
 from flask import Flask
 from models import PlayerStats, StatDetails
 
+from data_updater.updaters import stat_details_data
 from data_updater.utils.db_utilities import apply_update
-from data_updater.utils.stat_details import get_stat_details
 
 
 def update(app: Flask):
@@ -16,7 +16,7 @@ def update(app: Flask):
     # Update stat details
     stat_details = []
     for sn in stat_names:
-        if details_dict := get_stat_details(sn):
+        if details_dict := stat_details_data.get(sn, None):
             stat_details.append({"name": sn, **details_dict})
 
     apply_update(app, StatDetails, stat_details)

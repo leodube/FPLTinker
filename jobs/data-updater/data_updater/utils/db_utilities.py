@@ -1,5 +1,6 @@
 """Contains database helper methods"""
 
+from pprint import pprint
 from typing import List, TypeVar
 
 from flask import Flask
@@ -19,12 +20,13 @@ def apply_update(app: Flask, model: BaseModelType, entries_data: List[dict]):
             data.pop("id", None)
             entry = model(**data)
             if found := model.find_instance(entry):
-                # TODO: only update if there are new changes
-                found.update(model.index_constraints(), **data)
-                found.save()
-                num_updated += 1
+                if found.diff(
+                    entry, exclude=("id", "created_at", "updated_at")
+                ):  # has updates
+                    found.update(model.index_constraints(), **data)
+                    found.save()
+                    num_updated += 1
             else:
-                pass
                 entry.save()
 
         num_added = model.count() - db_count_before
@@ -36,4 +38,3 @@ def apply_update(app: Flask, model: BaseModelType, entries_data: List[dict]):
     except SQLAlchemyError as err:
         model.rollback()
         app.logger.error(f"Failed to update table. See error: {err}")
-
