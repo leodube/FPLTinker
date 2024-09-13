@@ -1,11 +1,11 @@
 """Gameweek model"""
 
 # pylint: disable=unsubscriptable-object
-
 from __future__ import annotations
 
 from typing import List, Optional
 
+from dateutil.parser import parse
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, WithTimestamps
@@ -49,6 +49,13 @@ class Gameweek(Base, WithTimestamps):
         back_populates="gameweek", init=False
     )
     top_player: Mapped["Player"] = db.relationship(viewonly=True, init=False)
+
+    # Post initialization
+    def __post_init__(self):
+        self.deadline_time = parse(self.deadline_time, ignoretz=True)
+        self.release_time = (
+            parse(self.release_time, ignoretz=True) if self.release_time else None
+        )
 
     # Methods
     @classmethod

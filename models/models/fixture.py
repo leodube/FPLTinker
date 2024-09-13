@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
+from dateutil.parser import parse
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, WithTimestamps
@@ -44,6 +45,10 @@ class Fixture(Base, WithTimestamps):
         back_populates="fixtures", viewonly=True, init=False
     )
     stats: Mapped[List["FixtureStat"]] = db.relationship(init=False)
+
+    # Post initialization
+    def __post_init__(self):
+        self.kickoff_time = parse(self.kickoff_time, ignoretz=True)
 
     # Methods
     @classmethod
