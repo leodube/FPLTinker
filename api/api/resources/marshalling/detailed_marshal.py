@@ -21,7 +21,7 @@ class DetailedMarshal:  # pylint: disable=too-few-public-methods
         "topPlayer": fields.Nested(
             BaseMarshal.player, attribute="top_player", allow_null=True
         ),
-        "fixtures": fields.List(fields.Nested(BaseMarshal.gameweek)),
+        "fixtures": fields.List(fields.Nested(BaseMarshal.fixture)),
     }
 
     player: dict = {
@@ -30,6 +30,8 @@ class DetailedMarshal:  # pylint: disable=too-few-public-methods
         "stats": fields.Nested(BaseMarshal.player_stats),
     }
 
-    position: dict = {"players": fields.List(fields.Nested(BaseMarshal.position))}
+    position: dict = {"players": fields.List(fields.Nested(BaseMarshal.player))}
 
-    team: dict = {"players": fields.List(fields.Nested(BaseMarshal.team))}
+    team: dict = {
+        "players": fields.List(fields.Nested(BaseMarshal.player)),
+    }

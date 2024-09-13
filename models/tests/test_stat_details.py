@@ -38,7 +38,7 @@ class TestStatDetails:
 
     def test_serialize(self):
         """Assert the stat details object can be serialized."""
-        stat_details = stat_details = factory_stat_details()
+        stat_details = factory_stat_details()
         assert stat_details.serialize()
 
     def test_all(self):

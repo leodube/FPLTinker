@@ -43,6 +43,7 @@ class TestTeam:
         team = factory_team()
         assert team.serialize()
 
+    # TODO: Add test_diff tests to rest of models
     def test_diff(self):
         """Assert the team object can be diffed."""
         team_1 = factory_team(code=1, name=f"team 1")

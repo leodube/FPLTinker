@@ -12,6 +12,7 @@ python-dotenv = "^1.0.1"
 psycopg2 = "^2.9.9"
 models = { path = "../models" }
 flask-restx = "^1.3.0"
+simplejson = "^3.19.3"
 
 
 [tool.poetry.group.dev.dependencies]
