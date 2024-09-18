@@ -11,7 +11,7 @@ from tests import (
     factory_player_stats,
     factory_position,
     factory_team,
-    player_stats_data,
+    player_stats_sample,
 )
 
 from ..models.utils import date_utilities
@@ -31,7 +31,7 @@ class TestPlayerStats:
     @pytest.fixture
     def data(self, player) -> dict:
         """Returns a class-wide copy of the player stats data object."""
-        _data = deepcopy(player_stats_data)
+        _data = deepcopy(player_stats_sample)
         _data.update({"player_id": player.id})
         return _data
 

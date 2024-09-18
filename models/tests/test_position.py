@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import Position
-from tests import factory_position, position_data
+from tests import factory_position, position_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -16,7 +16,7 @@ class TestPosition:
     @pytest.fixture
     def data(self) -> dict:
         """Returns a class-wide copy of the position data object."""
-        return deepcopy(position_data)
+        return deepcopy(position_sample)
 
     def test_save(self):
         """Assert the position can be saved."""

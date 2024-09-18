@@ -1,7 +1,6 @@
 """Common setup and fixtures for the pytest suite."""
 
 import pytest
-from flask_migrate import Migrate, downgrade, upgrade
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from ..manage import create_app

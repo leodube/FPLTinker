@@ -1,0 +1,18 @@
+fixture_sample = {
+    "fpl_id": 1,
+    "code": 1,
+    "finished": True,
+    "finished_provisional": True,
+    "kickoff_time": "2024-08-16 19:00:00",
+    "minutes": 90,
+    "provisional_start_time": False,
+    "started": True,
+    "team_a_difficulty": 2,
+    "team_a_score": 1,
+    "team_h_difficulty": 3,
+    "team_h_score": 1,
+    "gameweek_id": 1,
+    "team_a_id": 1,
+    "team_h_id": 2,
+    "season": 20242025,
+}

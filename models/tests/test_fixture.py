@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import Fixture, Gameweek, Team
-from tests import factory_fixture, factory_gameweek, factory_team, fixture_data
+from tests import factory_fixture, factory_gameweek, factory_team, fixture_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -31,7 +31,7 @@ class TestFixture:
     @pytest.fixture
     def data(self, gameweek: Gameweek, away_team: Team, home_team: Team) -> dict:
         """Returns a class-wide copy of the fixture data object."""
-        _data = deepcopy(fixture_data)
+        _data = deepcopy(fixture_sample)
         _data.update(
             {
                 "gameweek_id": gameweek.id,

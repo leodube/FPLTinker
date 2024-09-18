@@ -7,8 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from models.models import Team
 
-# from models.schemas import Schema
-from tests import factory_team, team_data
+from tests import factory_team, team_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -18,7 +17,7 @@ class TestTeam:
     @pytest.fixture
     def data(self) -> dict:
         """Returns a class-wide copy of the team data object."""
-        return deepcopy(team_data)
+        return deepcopy(team_sample)
 
     def test_save(self):
         """Assert the team can be saved."""

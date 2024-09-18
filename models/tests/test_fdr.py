@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import FDR, Team
-from tests import factory_fdr, factory_team, fdr_data
+from tests import factory_fdr, factory_team, fdr_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -21,7 +21,7 @@ class TestFDR:
     @pytest.fixture
     def data(self, team) -> dict:
         """Returns a class-wide copy of the fdr data object."""
-        _data = deepcopy(fdr_data)
+        _data = deepcopy(fdr_sample)
         _data.update({"team_id": team.id})
         return _data
 

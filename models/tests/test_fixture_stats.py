@@ -14,7 +14,7 @@ from tests import (
     factory_position,
     factory_stat_details,
     factory_team,
-    fixture_stat_data,
+    fixture_stat_sample,
 )
 
 
@@ -58,7 +58,7 @@ class TestFixtureStat:
         self, fixture: Fixture, team: Team, player: Player, stat_details: StatDetails
     ) -> dict:
         """Returns a class-wide copy of the fixture stat data object."""
-        _data = deepcopy(fixture_stat_data)
+        _data = deepcopy(fixture_stat_sample)
         _data.update(
             {
                 "fixture_id": fixture.id,

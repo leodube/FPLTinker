@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import StatDetails
-from tests import factory_stat_details, stat_details_data
+from tests import factory_stat_details, stat_details_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -16,7 +16,7 @@ class TestStatDetails:
     @pytest.fixture
     def data(self) -> dict:
         """Returns a class-wide copy of the stat details data object."""
-        return deepcopy(stat_details_data)
+        return deepcopy(stat_details_sample)
 
     def test_save(self):
         """Assert the stat details can be saved."""

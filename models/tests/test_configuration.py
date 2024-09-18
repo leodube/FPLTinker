@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import Configuration
-from tests import configuration_data, factory_configuration
+from tests import configuration_sample, factory_configuration
 
 
 @pytest.mark.usefixtures("session")
@@ -16,7 +16,7 @@ class TestConfiguration:
     @pytest.fixture
     def data(self) -> dict:
         """Returns a class-wide copy of the configuration data object."""
-        return deepcopy(configuration_data)
+        return deepcopy(configuration_sample)
 
     def test_save(self):
         """Assert the configuration can be saved."""

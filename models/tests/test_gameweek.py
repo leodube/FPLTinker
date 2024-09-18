@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from models.models import Gameweek
-from tests import factory_gameweek, gameweek_data
+from tests import factory_gameweek, gameweek_sample
 
 
 @pytest.mark.usefixtures("session")
@@ -16,7 +16,7 @@ class TestGameweek:
     @pytest.fixture
     def data(self) -> dict:
         """Returns a class-wide copy of the gameweek data object."""
-        return deepcopy(gameweek_data)
+        return deepcopy(gameweek_sample)
 
     def test_save(self):
         """Assert the gameweek can be saved."""
