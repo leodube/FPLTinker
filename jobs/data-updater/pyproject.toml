@@ -10,10 +10,11 @@ python = "^3.12"
 flask = "^3.0.3"
 asyncio = "^3.4.3"
 aiohttp = "^3.10.5"
-psycopg2 = "^2.9.9"
+psycopg = "^3.2.4"
 python-dotenv = "^1.0.1"
 models = { path = "../../models" }
 fpl = { git = "https://github.com/leodube/fpl.git" }
+pytest-mock = "^3.14.0"
 
 
 [tool.poetry.group.dev.dependencies]

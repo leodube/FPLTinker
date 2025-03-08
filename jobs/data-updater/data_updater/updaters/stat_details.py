@@ -1,14 +1,17 @@
 """The database updater for the stat details model."""
 
 from flask import Flask
-from models import PlayerStats, StatDetails
+from fpltinker.models import PlayerStats, StatDetails
+from fpltinker.data import stat_details_data
 
-from data_updater.updaters import stat_details_data
 from data_updater.utils.db_utilities import apply_update
 
 
-def update(app: Flask):
+def update(app: Flask) -> dict:
     """Updates the stat details."""
+    if not (app.config.get("FLAGS", {}).get("statDetails")):
+        return
+
     app.logger.debug("Updating stat details.")
 
     stat_names = PlayerStats.__dict__.keys()
@@ -20,3 +23,4 @@ def update(app: Flask):
             stat_details.append({"name": sn, **details_dict})
 
     apply_update(app, StatDetails, stat_details)
+    return stat_details

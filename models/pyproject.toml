@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Contains the common data models for the FPL Tinker backend."
 authors = ["Leo Dube <leo.s.dube@gmail.com>"]
 readme = "README.md"
-packages = [{ include = "models" }, { include = "migrations" }]
+packages = [
+  { include = "models", to = "fpltinker" },
+  { include = "migrations", to = "fpltinker" },
+  { include = "data", to = "fpltinker" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"

@@ -1,4 +1,4 @@
-from models.models import Player
+from ...models import Player
 
 player_sample = {
     "fpl_id": 17,

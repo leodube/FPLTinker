@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from deepdiff import DeepDiff
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import db, intpk, timestamp
@@ -44,6 +44,8 @@ class Base(db.Model):
         for key, value in kwargs.items():
             if key not in index_constraints:
                 setattr(self, key, value)
+        if hasattr(self, "updated_at"):
+            setattr(self, "updated_at", func.CURRENT_TIMESTAMP())
 
     def delete(self):
         """Delete the object from the database."""

@@ -2,13 +2,16 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, Player, Position, Team
+from fpltinker.models import Configuration, Player, Position, Team
 
 from data_updater.utils.db_utilities import apply_update
 
 
-async def update(app: Flask, fpl: FPL):
+async def update(app: Flask, fpl: FPL) -> dict:
     """Updates the players fom the FPL api."""
+    if not (app.config.get("FLAGS", {}).get("players")):
+        return
+
     app.logger.debug("Updating players.")
 
     api_players = await fpl.get_players(return_json=True)
@@ -16,10 +19,12 @@ async def update(app: Flask, fpl: FPL):
 
     # Update players
     players = []
-    for p in api_players:
+    for ap in api_players:
         # Set base attributes
+        p = ap.copy()
         p["fpl_id"] = p["id"]
         p["season"] = season
+        p.pop("id", None)
 
         # Set foreign key attributes
         p["position_id"] = Position.find(fpl_id=p["element_type"], season=season).id
@@ -35,6 +40,7 @@ async def update(app: Flask, fpl: FPL):
 
     # Apply updates to db
     apply_update(app, Player, players)
+    return players
 
 
 # Unconsumed properties returned by FPL api

@@ -2,13 +2,16 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, Gameweek, Player
+from fpltinker.models import Configuration, Gameweek, Player
 
 from data_updater.utils.db_utilities import apply_update
 
 
-async def update(app: Flask, fpl: FPL):
+async def update(app: Flask, fpl: FPL) -> dict:
     """Updates the gameweeks fom the FPL api."""
+    if not (app.config.get("FLAGS", {}).get("gameweeks")):
+        return
+
     app.logger.debug("Updating gameweeks.")
 
     api_gameweeks = await fpl.get_gameweeks(include_live=True, return_json=True)
@@ -16,10 +19,12 @@ async def update(app: Flask, fpl: FPL):
 
     # Update gameweeks
     gameweeks = []
-    for g in api_gameweeks:
+    for ag in api_gameweeks:
         # Set base attributes
+        g = ag.copy()
         g["fpl_id"] = g["id"]
         g["season"] = season
+        g.pop("id", None)
 
         # Set foreign key attributes
         g["top_player_id"] = None
@@ -33,6 +38,7 @@ async def update(app: Flask, fpl: FPL):
 
     # Apply updates to db
     apply_update(app, Gameweek, gameweeks)
+    return gameweeks
 
 
 # Unconsumed properties returned by FPL api

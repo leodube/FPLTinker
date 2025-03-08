@@ -2,14 +2,17 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, Position
+from fpltinker.models import Configuration, Position
 
 from data_updater.utils.date_utilities import is_today
 from data_updater.utils.db_utilities import apply_update
 
 
-async def update(app: Flask, fpl: FPL):
+async def update(app: Flask, fpl: FPL) -> dict:
     """Updates the positions fom the FPL api."""
+    if not (app.config.get("FLAGS", {}).get("positions")):
+        return
+
     app.logger.debug("Updating positions.")
 
     # Return if updater already ran today
@@ -22,10 +25,12 @@ async def update(app: Flask, fpl: FPL):
 
     # Update positions
     positions = []
-    for p in api_positions:
+    for ap in api_positions:
         # Set base attributes
+        p = ap.copy()
         p["fpl_id"] = p["id"]
         p["season"] = season
+        p.pop("id", None)
 
         # Generate dict and add to list
         keys = Position.__dict__.keys()
@@ -33,6 +38,7 @@ async def update(app: Flask, fpl: FPL):
         positions.append(position)
 
     apply_update(app, Position, positions)
+    return positions
 
 
 # Unconsumed properties returned by FPL api

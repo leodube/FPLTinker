@@ -7,7 +7,7 @@ import sys
 from os import path
 
 from flask import Flask
-from models import db
+from fpltinker.models import db
 
 from config import CONFIGURATION
 from data_updater.worker import run

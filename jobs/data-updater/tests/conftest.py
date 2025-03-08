@@ -3,10 +3,9 @@
 import aiohttp
 import pytest
 import pytest_asyncio
-from flask_migrate import Migrate, downgrade, upgrade
 from fpl import FPL
-from models import SQLAlchemyBase
-from models import db as _db
+from fpltinker.models import SQLAlchemyBase
+from fpltinker.models import db as _db
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from update import create_app
@@ -19,7 +18,7 @@ def app():  # pylint: disable=redefined-outer-name, invalid-name
     yield _app
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="function")
 async def fpl():  # pylint: disable=redefined-outer-name, invalid-name
     """Return a session-wide fpl object."""
     _session = aiohttp.ClientSession()
@@ -40,16 +39,8 @@ def db(app, metadata):  # pylint: disable=redefined-outer-name, invalid-name
     """Return a session-wide initialised database."""
     with app.app_context():
         # Recreate database
-        _db.create_all()
-        Migrate(app, _db)
-        downgrade(
-            directory=app.config.get("MIGRATIONS_DIR_PATH"),
-            revision="base",
-        )
         metadata.drop_all(_db.engine)
-        upgrade(
-            directory=app.config.get("MIGRATIONS_DIR_PATH"),
-        )
+        metadata.create_all(_db.engine)
         yield _db
 
 

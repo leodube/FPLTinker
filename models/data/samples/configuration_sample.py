@@ -1,4 +1,4 @@
-from models.models import Configuration
+from ...models import Configuration
 
 configuration_sample = {
     "name": "config name",

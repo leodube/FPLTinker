@@ -1,0 +1,12 @@
+{
+  "configuration": false,
+  "fdr": false,
+  "fixtureStats": true,
+  "fixtures": false,
+  "gameweeks": false,
+  "playerStats": false,
+  "players": false,
+  "positions": false,
+  "statDetails": false,
+  "teams": false
+}

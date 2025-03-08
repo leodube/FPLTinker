@@ -2,13 +2,16 @@
 
 from flask import Flask
 from fpl import FPL
-from models import FDR, Configuration, Team
+from fpltinker.models import FDR, Configuration, Team
 
 from data_updater.utils.db_utilities import apply_update
 
 
-async def update(app: Flask, fpl: FPL):
+async def update(app: Flask, fpl: FPL) -> dict:
     """Updates the fixture difficulty rankings fom the FPL api."""
+    if not (app.config.get("FLAGS", {}).get("fdr")):
+        return
+
     app.logger.debug("Updating FDRs.")
 
     api_fdr = await fpl.FDR()
@@ -32,3 +35,4 @@ async def update(app: Flask, fpl: FPL):
 
     # Apply updates to db
     apply_update(app, FDR, fdr)
+    return fdr

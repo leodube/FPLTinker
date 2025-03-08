@@ -1,9 +1,10 @@
 """All of the configurations for the service is captured here."""
 
+import json
 import os
 
 from dotenv import find_dotenv, load_dotenv
-import migrations
+import fpltinker.migrations as migrations
 
 load_dotenv(find_dotenv())
 
@@ -26,7 +27,7 @@ class _Config:  # pylint: disable=too-few-public-methods
     DB_HOST = os.getenv("DATABASE_HOST", "")
     DB_PORT = os.getenv("DATABASE_PORT", "5432")
     SQLALCHEMY_DATABASE_URI = (
-        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/"
+        f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/"
         f"{DB_NAME}"
     )
 
@@ -36,6 +37,10 @@ class _Config:  # pylint: disable=too-few-public-methods
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev class configuration."""
+
+    # FLAGS
+    with open("flags.json", "r") as file:
+        FLAGS = json.load(file)
 
     DEBUG = True
 
@@ -50,7 +55,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     DB_HOST = os.getenv("TEST_DATABASE_HOST", "")
     DB_PORT = os.getenv("TEST_DATABASE_PORT", "5432")
     SQLALCHEMY_DATABASE_URI = (
-        f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
 
     # MIGRATIONS

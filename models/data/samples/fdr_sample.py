@@ -1,4 +1,4 @@
-from models.models import FDR
+from ...models import FDR
 
 fdr_sample = {
     "team_id": 1,

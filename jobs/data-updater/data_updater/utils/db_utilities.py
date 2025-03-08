@@ -4,7 +4,7 @@ from pprint import pprint
 from typing import List, TypeVar
 
 from flask import Flask
-from models import Base
+from fpltinker.models import Base
 from sqlalchemy.exc import SQLAlchemyError
 
 BaseModelType = TypeVar("BaseModelType", bound=Base)
@@ -17,7 +17,6 @@ def apply_update(app: Flask, model: BaseModelType, entries_data: List[dict]):
         num_updated = 0
 
         for data in entries_data:
-            data.pop("id", None)
             entry = model(**data)
             if found := model.find_instance(entry):
                 if found.diff(

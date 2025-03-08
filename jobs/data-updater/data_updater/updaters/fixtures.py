@@ -2,13 +2,16 @@
 
 from flask import Flask
 from fpl import FPL
-from models import Configuration, Fixture, Gameweek, Team
+from fpltinker.models import Configuration, Fixture, Gameweek, Team
 
 from data_updater.utils.db_utilities import apply_update
 
 
-async def update(app: Flask, fpl: FPL):
+async def update(app: Flask, fpl: FPL) -> dict:
     """Updates the fixtures fom the FPL api."""
+    if not (app.config.get("FLAGS", {}).get("fixtures")):
+        return
+
     app.logger.debug("Updating fixtures.")
 
     # FUTURE: fdr = await fpl.FDR()
@@ -17,10 +20,12 @@ async def update(app: Flask, fpl: FPL):
 
     # Update fixtures
     fixtures = []
-    for f in api_fixtures:
+    for af in api_fixtures:
         # Set base attributes
+        f = af.copy()
         f["fpl_id"] = f["id"]
         f["season"] = season
+        f.pop("id", None)
 
         # Set foreign key attributes
         f["gameweek_id"] = Gameweek.find(fpl_id=f["event"], season=season).id
@@ -39,3 +44,4 @@ async def update(app: Flask, fpl: FPL):
 
     # Apply updates to db
     apply_update(app, Fixture, fixtures)
+    return fixtures
